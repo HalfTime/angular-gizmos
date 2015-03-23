@@ -1,0 +1,18 @@
+.topic-ring {
+  position: relative;
+  width: 35px;
+  height: 35px;
+  margin: 0 10px;
+ }
+
+ .topic-ring-level {
+   position: absolute;
+   top: 10px;
+   text-align: center;
+   width: 35px;
+   height: 35px;
+   color: $gray7;
+   /*@include font-roboto-light;*/
+   @include font( 0.9 );
+ }
+

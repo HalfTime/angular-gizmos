@@ -1,0 +1,9 @@
+@mixin font( $font-size, $line-height:0, $unit:rem ) {
+  @if $line-height == 0 {
+    $line-height: $font-size;
+  }
+
+  font-size: $font-size + $unit;
+  line-height: $line-height + $unit;
+}
+
