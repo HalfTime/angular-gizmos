@@ -1,0 +1,42 @@
+//
+// Note that the font files in dist/fonts won't be accesible to the application
+// unless moved out of bower_components.  You could copy them out to your
+// public assets dir in a `gulp fonts` task.
+//
+@font-face {
+  font-family: 'Roboto Light';
+  src: url('fonts/roboto-light.woff2') format('woff2'),
+       url('fonts/roboto-light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Hanken';
+  src: url('fonts/Hanken-Book.woff') format('woff');
+}
+
+// FONTS
+$basePercent: 100;
+$basePixel: $basePercent/100 * 16;
+/*$monospaceFont: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;*/
+
+$orbitronLight: 'Hanken';
+$orbitronMedium: 'Hanken';
+
+$default-font: Geneva, Verdana, Helvetica, Arial, sans-serif;
+$roboto-light: 'Roboto Light', sans-serif;
+$statistic-font : 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$hanken-book: 'Hanken', sans-serif;
+
+@mixin font-roboto-light {
+  font-family: $roboto-light;
+  font-weight: 100;
+}
+
+@mixin font-statistic {
+  font-family: $statistic-font;
+}
+
+@mixin font-hanken-book {
+  font-family: $hanken-book;
+}
+

@@ -1,0 +1,119 @@
+//////////////////////////////////
+// Color
+//////////////////////////////////
+
+// BASE
+$black: #000;
+$white: #fff;
+
+// GRAYS
+$gray1: lighten($black, 10%);
+$gray2: lighten($black, 20%);
+$gray3: lighten($black, 30%);
+$gray4: lighten($black, 40%);
+$gray5: lighten($black, 50%);
+$gray6: lighten($black, 60%);
+$gray7: lighten($black, 70%);
+$gray8: lighten($black, 80%);
+$gray9: lighten($black, 90%);
+
+// UI
+$blue: #408bdc;
+$green: #9EEFAA;
+$yellow: #FFE545;
+$blue-gray: #E9EDf0;
+$slate: #51546B;
+$light-orange: #FCAB28;
+$orange: #FC8F30;
+
+$ui-teal: #42cbc8;
+
+
+//
+// Note that the font files in dist/fonts won't be accesible to the application
+// unless moved out of bower_components.  You could copy them out to your
+// public assets dir in a `gulp fonts` task.
+//
+@font-face {
+  font-family: 'Roboto Light';
+  src: url('fonts/roboto-light.woff2') format('woff2'),
+       url('fonts/roboto-light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Hanken';
+  src: url('fonts/Hanken-Book.woff') format('woff');
+}
+
+// FONTS
+$basePercent: 100;
+$basePixel: $basePercent/100 * 16;
+/*$monospaceFont: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;*/
+
+$orbitronLight: 'Hanken';
+$orbitronMedium: 'Hanken';
+
+$default-font: Geneva, Verdana, Helvetica, Arial, sans-serif;
+$roboto-light: 'Roboto Light', sans-serif;
+$statistic-font : 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$hanken-book: 'Hanken', sans-serif;
+
+@mixin font-roboto-light {
+  font-family: $roboto-light;
+  font-weight: 100;
+}
+
+@mixin font-statistic {
+  font-family: $statistic-font;
+}
+
+@mixin font-hanken-book {
+  font-family: $hanken-book;
+}
+
+
+@mixin font( $font-size, $line-height:0, $unit:rem ) {
+  @if $line-height == 0 {
+    $line-height: $font-size;
+  }
+
+  font-size: $font-size + $unit;
+  line-height: $line-height + $unit;
+}
+
+
+// Default styles for the background-size directive.  Assume that the caller
+// wants a something like an <img> that grows to fill its container, but
+// `contain` ensures the entire image is visible.  `cover` is another good
+// value, it trades off being able to see the entire image for scaling it up
+// to fill the container fully.
+
+// Note that if IE supported `object-fit` a normal `<img>` could be used instead.
+// http://caniuse.com/#feat=object-fit
+[background-image] {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+.topic-ring {
+  position: relative;
+  width: 35px;
+  height: 35px;
+  margin: 0 10px;
+ }
+
+ .topic-ring-level {
+   position: absolute;
+   top: 10px;
+   text-align: center;
+   width: 35px;
+   height: 35px;
+   color: $gray7;
+   /*@include font-roboto-light;*/
+   @include font( 0.9 );
+ }
+

@@ -1,0 +1,16 @@
+// Default styles for the background-size directive.  Assume that the caller
+// wants a something like an <img> that grows to fill its container, but
+// `contain` ensures the entire image is visible.  `cover` is another good
+// value, it trades off being able to see the entire image for scaling it up
+// to fill the container fully.
+
+// Note that if IE supported `object-fit` a normal `<img>` could be used instead.
+// http://caniuse.com/#feat=object-fit
+[background-image] {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
