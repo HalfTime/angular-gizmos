@@ -1,6 +1,17 @@
 angular-gizmos
 ============
 
+TODO:
+
+- move over grab-bag stuff
+- update readme
+- kill gulpfile2
+- add gulp bump task
+- cleanup dist / release task
+- remove fonts?
+- rename topic ring => level ring
+
+
 ## Development
 
 To start developing in the project run:
