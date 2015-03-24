@@ -8,8 +8,9 @@ TODO:
 - kill gulpfile2
 - add gulp bump task
 - cleanup dist / release task
-- remove fonts?
 - rename topic ring => level ring
+- include parts of gulpfile
+- include git commit message hooks
 
 
 ## Development
