@@ -1,3 +1,6 @@
+//
+// Font
+//
 @mixin font( $font-size, $line-height:0, $unit:rem ) {
   @if $line-height == 0 {
     $line-height: $font-size;
@@ -6,4 +9,37 @@
   font-size: $font-size + $unit;
   line-height: $line-height + $unit;
 }
+
+
+//
+// Responsive
+//
+$breakpoints: (
+  480: 480px,
+  600: 600px,
+  760: 760px,
+  960: 960px,
+);
+
+// Adds a min-width media query for the given breakpoint name with the
+// nested @content.  Can pass in a breakpoint name from the $breakpoints
+// map, or an explicit size.
+@mixin break-at( $name-or-min-width ) {
+  @if map-has-key($breakpoints, $name-or-min-width) {
+    $min-width: map-get($breakpoints, $name-or-min-width);
+  }
+  @else if type-of($name-or-min-width) == 'number' and not unitless($name-or-min-width) {
+    $min-width: $name-or-min-width;
+  }
+  @else {
+    @error("No breakpoint named '" + $name-or-min-width + "' in $breakpoints.
+Available breakpoints: '" + inspect($breakpoints) + "'.
+You can also pass in a value like '500px'.");
+  }
+
+  @media only screen and ( min-width: $min-width ) {
+    @content;
+  }
+}
+
 

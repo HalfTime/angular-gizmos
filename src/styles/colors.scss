@@ -2,11 +2,9 @@
 // Color
 //////////////////////////////////
 
-// BASE
 $black: #000;
 $white: #fff;
 
-// GRAYS
 $gray1: lighten($black, 10%);
 $gray2: lighten($black, 20%);
 $gray3: lighten($black, 30%);
@@ -16,15 +14,4 @@ $gray6: lighten($black, 60%);
 $gray7: lighten($black, 70%);
 $gray8: lighten($black, 80%);
 $gray9: lighten($black, 90%);
-
-// UI
-$blue: #408bdc;
-$green: #9EEFAA;
-$yellow: #FFE545;
-$blue-gray: #E9EDf0;
-$slate: #51546B;
-$light-orange: #FCAB28;
-$orange: #FC8F30;
-
-$ui-teal: #42cbc8;
 
