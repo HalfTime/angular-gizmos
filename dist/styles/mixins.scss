@@ -1,3 +1,6 @@
+//
+// Font mixins
+//
 @mixin font( $font-size, $line-height:0, $unit:rem ) {
   @if $line-height == 0 {
     $line-height: $font-size;
@@ -6,4 +9,120 @@
   font-size: $font-size + $unit;
   line-height: $line-height + $unit;
 }
+
+
+//
+// Responsive mixins
+//
+$breakpoints: (
+  480: 480px,
+  600: 600px,
+  760: 760px,
+  960: 960px,
+);
+
+// Adds a min-width media query for the given breakpoint name with the
+// nested @content.  Can pass in a breakpoint name from the $breakpoints
+// map, or an explicit size.
+@mixin break-at( $name-or-min-width ) {
+  @if map-has-key($breakpoints, $name-or-min-width) {
+    $min-width: map-get($breakpoints, $name-or-min-width);
+  }
+  @else if type-of($name-or-min-width) == 'number' and not unitless($name-or-min-width) {
+    $min-width: $name-or-min-width;
+  }
+  @else {
+    @error("No breakpoint named '" + $name-or-min-width + "' in $breakpoints.
+Available breakpoints: '" + inspect($breakpoints) + "'.
+You can also pass in a value like '500px'.");
+  }
+
+  @media only screen and ( min-width: $min-width ) {
+    @content;
+  }
+}
+
+//
+// Positioning mixins
+//
+@mixin vertical-align {
+  position: relative;
+  top: 50%;
+  transform: translateY( -50% );
+}
+
+@mixin apply-flexible-height {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+// Maintains an aspect ratio in any element, like a div.
+// Source: https://css-tricks.com/snippets/sass/maintain-aspect-ratio-mixin/#comment-1592606
+// Usage:
+//    @include aspect-ratio(16, 9);
+//    @include aspect-ratio(.33);
+@mixin aspect-ratio($ratio-or-width, $height: null) {
+  $padding: if($height, percentage($height/$ratio-or-width), percentage(1/$ratio-or-width));
+  &:before { content:''; float: left; padding-bottom: $padding;  }
+  &:after  { content:''; display: table; clear: both;  }
+}
+
+
+//
+// Misc mixins
+//
+@mixin triangle( $direction, $color, $size ) {
+  @if $direction == "left" {
+    border-bottom: $size solid transparent;
+    border-right: $size solid $color;
+    border-top: $size solid transparent;
+  }
+
+  @else if $direction == "right" {
+    border-bottom: $size solid transparent;
+    border-left: $size solid $color;
+    border-top: $size solid transparent;
+  }
+
+  @else if $direction == "up" {
+    border-bottom: $size solid $color;
+    border-left: $size solid transparent;
+    border-right: $size solid transparent;
+  }
+
+  @else if $direction == "down" {
+    border-right: $size solid transparent;
+    border-left: $size solid transparent;
+    border-top: $size solid $color;
+  }
+
+  height: 0;
+  width: 0;
+}
+
+
+// This is a simple sugaring for linear gradients
+@mixin gradient( $v1, $v2 ) {
+  background-image: linear-gradient( $v1, $v2 );
+}
+
+@mixin transparent-gradient( $start, $start-opacity, $end, $end-opacity ) {
+  @include gradient(
+    rgba( $start, $start-opacity ),
+    rgba( $end, $end-opacity )
+  );
+}
+
+
 
