@@ -174,7 +174,6 @@ You can also pass in a value like '500px'.");
   position: relative;
   width: 35px;
   height: 35px;
-  margin: 0 10px;
  }
 
  .topic-ring-level {
@@ -184,7 +183,6 @@ You can also pass in a value like '500px'.");
    width: 35px;
    height: 35px;
    color: $gray7;
-   /*@include font-roboto-light;*/
    @include font( 0.9 );
  }
 
