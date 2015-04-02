@@ -99,6 +99,7 @@ gulp.task('dist.directives', function() {
       .pipe(jsFilter)
         .pipe(g.replace("!MODULE_NAME!", moduleName))
         .pipe(g.babel({ blacklist: ["useStrict"] }))
+        .pipe(g.ngAnnotate())
         //.pipe(g.uglify())
         .pipe(g.concat(directory + '.js'))
         .pipe(gulp.dest('dist/directives/' + directory))

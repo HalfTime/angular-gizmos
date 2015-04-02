@@ -6,7 +6,9 @@
     "start": "gulp watch",
     "test": "gulp test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ng-annotate": "^0.15.4"
+  },
   "devDependencies": {
     "event-stream": "^3.1.5",
     "gulp": "^3.7.0",

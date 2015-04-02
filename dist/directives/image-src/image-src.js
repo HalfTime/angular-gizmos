@@ -10,7 +10,7 @@
 //    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
 //    <img image-src='logo'>
 //
-angular.module("gizmos.imageSrc", []).directive("imageSrc", function (Config) {
+angular.module("gizmos.imageSrc", []).directive("imageSrc", ["Config", function (Config) {
   return {
     restrict: "A",
     link: function link($scope, element, attributes) {
@@ -19,4 +19,4 @@ angular.module("gizmos.imageSrc", []).directive("imageSrc", function (Config) {
       });
     }
   };
-});
+}]);
