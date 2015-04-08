@@ -344,22 +344,6 @@ angular.module("gizmos.imageSrc", []).directive("imageSrc", ["Config", function 
   };
 }]);
 angular.module("gizmos.textFit", []);
-describe("textFit directive", function () {
-
-  beforeEach(module("gizmos.textFit"));
-
-  var render = function (text) {
-    var template = "\n      <div style=\"width: 80px; height: 80px\">\n        <div text-fit=\"text\"></div>\n      </div>\n    ";
-    var el = helpers.compile(template, { text: text }).appendTo("body");
-    helpers.flush();
-    return el;
-  };
-
-  it("sets an inline font-size style", function () {
-    var html = render("hi there").html();
-    expect(html).toMatch("font-size:");
-  });
-});
 // Directive textFit attaches textFit behavior to an element.  Currently, all
 // it does is register with an ancester textFitGroup directive which handles
 // resizing it.  Behavior for it to resize itself can be added when needed.
@@ -494,27 +478,6 @@ angular.module("gizmos.textFit").directive("textFitGroup", ["$timeout", "textFit
       };
     } };
 }]);
-describe("textFit()", function () {
-
-  beforeEach(module("gizmos.textFit"));
-
-  // Builds an element with a sized container and the given text
-  var buildElement = function (_ref) {
-    var text = _ref.text;
-
-    var container = $("<div style=\"width: 50px; height: 50px\"></div>").appendTo("body");
-    return $("<div>" + text + "</div>").appendTo(container);
-  };
-
-  it("shrinks the font size as the text gets longer", inject(function (textFit) {
-    var shortTextFontSize = textFit(buildElement({ text: "rat" }));
-    var mediumTextFontSize = textFit(buildElement({ text: "dece rat" }));
-    var longTextFontSize = textFit(buildElement({ text: "a totally DECENT rat!" }));
-
-    expect(longTextFontSize).toBeLessThan(mediumTextFontSize);
-    expect(mediumTextFontSize).toBeLessThan(shortTextFontSize);
-  }));
-});
 // Value textFit is the core text resizing function to scale up the font-size
 // of the given element until it no longer fits inside its container.
 //
