@@ -17,10 +17,10 @@ var path = require('path');
 var mergeStream = require('merge-stream');
 var rimraf = require('rimraf');
 
-// Adds tasks:
-//   gulp bump
-//   gulp bump --minor
-//   gulp bump --major
+// Adds tasks https://github.com/lfender6445/gulp-release-tasks
+//   gulp tag
+//   gulp tag --minor
+//   gulp tag --major
 require('gulp-release-tasks')(gulp);
 
 function directories(dir) {
