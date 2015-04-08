@@ -68,8 +68,7 @@ gulp.task('dist.fonts', function() {
 
 gulp.task('dist.scripts', function() {
   var glob = [
-    'src/scripts/**/*.js',
-    '!src/scripts/**/*-test.js'
+    'src/scripts/**/!(*-test).js',
   ]
 
   return gulp.src(glob)
@@ -82,7 +81,7 @@ gulp.task('dist.directives', function() {
 
   return mergeStream(directories(path).map(function(directory) {
     var jadeFilter = g.filter('**/*.jade')
-    var jsFilter = g.filter('**/*.js')
+    var jsFilter = g.filter('**/!(*-test).js')
     var scssFilter = g.filter('**/*.scss')
     var moduleName = 'gizmos.' + camelize(directory)
 
