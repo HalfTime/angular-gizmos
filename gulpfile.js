@@ -17,6 +17,12 @@ var path = require('path');
 var mergeStream = require('merge-stream');
 var rimraf = require('rimraf');
 
+// Adds tasks:
+//   gulp bump
+//   gulp bump --minor
+//   gulp bump --major
+require('gulp-release-tasks')(gulp);
+
 function directories(dir) {
   return fs.readdirSync(dir)
     //.filter(function(file) {
