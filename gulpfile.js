@@ -103,7 +103,6 @@ gulp.task('dist.directives', function() {
         }))
         .pipe(jadeFilter.restore())
       .pipe(jsFilter)
-        .pipe(g.replace("!MODULE_NAME!", moduleName))
         .pipe(g.babel({ blacklist: ["useStrict"] }))
         .pipe(g.ngAnnotate())
         //.pipe(g.uglify())
@@ -123,15 +122,33 @@ gulp.task('release', ['dist'], function() {
 })
 
 
-gulp.task('test', function(done) {
+function runKarma( action, done ) {
   var glob = [
+    // libs
     'bower_components/lodash/lodash.js',
+    'bower_components/jquery/dist/jquery.js',
+    'bower_components/angular/angular.js',
+    // test libs
+    'bower_components/angular-mocks/angular-mocks.js',
+    // implementations
     'src/scripts/**/*',
-    'src/**/*-test.js'
+    'src/**/!(*-test).js',
+    // tests
+    'test/helpers.js',
+    'src/**/*-test.js',
   ]
 
-  gulp.src(glob)
-    .pipe(g.karma({ configFile: 'karma.conf.js', action: 'run' }, done))
+  return gulp.src(glob)
+    .pipe(g.print())
+    .pipe(g.karma({ configFile: 'karma.conf.js', action: action }, done))
     .on('error', g.util.log)
+}
+
+gulp.task('test', function(done) {
+  return runKarma('run', done)
+})
+
+gulp.task('test.watch', function(done) {
+  return runKarma('watch', done)
 })
 

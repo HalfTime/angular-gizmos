@@ -2,14 +2,9 @@ module.exports = function ( karma ) {
   process.env.PHANTOMJS_BIN = 'node_modules/karma-phantomjs-launcher/node_modules/.bin/phantomjs';
 
   karma.set({
+    // Filled by the task `gulp karma-conf`
+    files: [],
     basePath: './',
-
-    /**
-     * Filled by the task `gulp karma-conf`
-     */
-    files: [
-    ],
-
     frameworks: ['jasmine'],
     reporters: 'progress',
     autoWatch: true,
@@ -20,6 +15,10 @@ module.exports = function ( karma ) {
     urlRoot: '/',
     browsers: [
       'PhantomJS'
-    ]
+    ],
+    preprocessors: {
+      '{src,test}/**/*.js': ['babel'],
+      'src/**/*.jade': ['jade', 'ng-html2js'],
+    }
   });
 };

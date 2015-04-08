@@ -8,7 +8,7 @@
 //
 //   <div background-image="{{ user.imageUrl }}"></div>
 //
-angular.module( '!MODULE_NAME!', [] ).directive( 'backgroundImage', function(){
+angular.module( 'gizmos.backgroundImage', [] ).directive( 'backgroundImage', function(){
 
     return {
       restrict: 'A',
