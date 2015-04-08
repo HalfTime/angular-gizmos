@@ -1,19 +1,12 @@
 /* jshint node: true */
 'use strict';
 
-var gulp = require('gulp'),
-    g = require('gulp-load-plugins')({lazy: false}),
-    noop = g.util.noop;
-    //es = require('event-stream'),
-    //bowerFiles = require('main-bower-files'),
-    //rimraf = require('rimraf'),
-    //queue = require('streamqueue'),
-    //lazypipe = require('lazypipe'),
-    //stylish = require('jshint-stylish'),
-    //bower = require('./bower'),
+var gulp = require('gulp');
+var g = require('gulp-load-plugins')({lazy: false});
 
 var fs = require('fs');
 var path = require('path');
+var runSequence = require('run-sequence');
 var mergeStream = require('merge-stream');
 var rimraf = require('rimraf');
 
@@ -40,13 +33,14 @@ function camelize(str) {
 gulp.task('default', ['dist', 'test'])
 
 
-gulp.task('dist', [
-  'clean',
-  'dist.directives',
-  'dist.scripts',
-  'dist.scss',
-  'dist.fonts',
-])
+gulp.task('dist', function(done) {
+  runSequence(
+    'clean',
+    ['dist.directives', 'dist.scripts', 'dist.scss', 'dist.fonts'],
+    'dist.concat',
+    done
+  )
+})
 
 
 gulp.task("clean", function () {
@@ -112,11 +106,11 @@ gulp.task('dist.directives', function() {
 });
 
 
-gulp.task('release', ['dist'], function() {
+gulp.task('dist.concat', function() {
   var glob = ['dist/**/*.js']
 
   return gulp.src(glob)
-    .pipe(g.print())
+    //.pipe(g.print())
     .pipe(g.concat('angular-gizmos.js'))
     .pipe(gulp.dest('dist'))
 })
@@ -139,7 +133,7 @@ function runKarma( action, done ) {
   ]
 
   return gulp.src(glob)
-    .pipe(g.print())
+    //.pipe(g.print())
     .pipe(g.karma({ configFile: 'karma.conf.js', action: action }, done))
     .on('error', g.util.log)
 }

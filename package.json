@@ -52,6 +52,7 @@
     "karma-script-launcher": "~0.1.0",
     "main-bower-files": "^1.0.1",
     "merge-stream": "^0.1.7",
-    "rimraf": "^2.3.2"
+    "rimraf": "^2.3.2",
+    "run-sequence": "^1.0.2"
   }
 }
