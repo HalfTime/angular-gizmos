@@ -44,6 +44,6 @@ angular.module("gizmos.directives").directive("topicRing", ["$injector", functio
 
   };
 }]);
-angular.module("gizmos.topicRing").run(["$templateCache", function ($templateCache) {
+angular.module("gizmos.directives").run(["$templateCache", function ($templateCache) {
   $templateCache.put("topic-ring.html", "<div ng-class=\"color\" easypiechart=\"\" percent=\"percent\" options=\"chartOptions\" class=\"topic-ring\"><div ng-bind=\"level\" class=\"topic-ring-level\"></div></div>");
 }]);

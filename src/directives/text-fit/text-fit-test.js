@@ -10,8 +10,8 @@ describe( 'textFit()', function() {
 
   it( 'shrinks the font size as the text gets longer', inject(function(textFit) {
     let shortTextFontSize = textFit( buildElement( { text: 'rat' } ) )
-    let mediumTextFontSize = textFit( buildElement( { text: 'dece rat' } ) )
-    let longTextFontSize = textFit( buildElement( { text: 'a totally DECENT rat!' } ) )
+    let mediumTextFontSize = textFit( buildElement( { text: 'a cool, dece rat' } ) )
+    let longTextFontSize = textFit( buildElement( { text: 'a totally DECENT rat! I think!' } ) )
 
     expect( longTextFontSize ).toBeLessThan( mediumTextFontSize  )
     expect( mediumTextFontSize ).toBeLessThan( shortTextFontSize  )

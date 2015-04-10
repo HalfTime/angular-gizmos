@@ -96,7 +96,7 @@ gulp.task('dist.directives', function() {
     var jadeFilter = g.filter('**/*.jade')
     var jsFilter = g.filter('**/!(*-test).js')
     //var scssFilter = g.filter('**/*.scss')
-    var moduleName = 'gizmos.' + camelize(directory)
+    var moduleName = 'gizmos.directives' //+ camelize(directory)
 
     return gulp.src(path + directory + '/*')
       .pipe(jadeFilter)

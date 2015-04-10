@@ -155,7 +155,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   // Min and max font size.
   min = options.min || 6;
-  max = options.max || 30;
+  max = options.max || 20;
 
   containerWidth = element.parent().width();
   containerHeight = element.parent().height();
