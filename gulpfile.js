@@ -29,8 +29,7 @@ function camelize(str) {
   });
 }
 
-gulp.task('default', ['dist', 'test'])
-
+gulp.task('default', ['watch', 'test.watch'])
 
 gulp.task('dist', function(done) {
   runSequence(
@@ -68,7 +67,6 @@ gulp.task('dist.fonts', function() {
 gulp.task('dist.filters', function() {
   var glob = 'src/filters/**/!(*-test).js'
   return gulp.src(glob)
-    .pipe(g.print())
     .pipe(gulp.dest('dist'))
 });
 
@@ -147,4 +145,9 @@ gulp.task('test', function(done) {
 gulp.task('test.watch', function(done) {
   return runKarma('watch', done)
 })
+
+gulp.task('watch', ['dist'], function() {
+  gulp.watch('src/**/*', ['dist'])
+})
+
 
