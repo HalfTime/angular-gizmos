@@ -13,7 +13,7 @@
 // - Allows silent returns or warnings if the element has no dimensions, based
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
-angular.module( 'gizmos.textFit' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
+angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
   var min, max, mid, lastMid, containerWidth, containerHeight
 
   element = angular.element( element )

@@ -1,6 +1,6 @@
 // Directive topic ring creates created a simple donut shape using the provided
 // `color` and `percent` of topic level completed
-angular.module("gizmos.topicRing", []).directive("topicRing", ["$injector", function ($injector) {
+angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {
   return {
     templateUrl: "topic-ring.html",
     scope: {

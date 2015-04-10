@@ -6,7 +6,7 @@
 //
 // The directive knows it is time to call textFit when the `isNeeded` property
 // on the passed in model is set to true.
-angular.module( 'gizmos.textFit' ).directive( 'textFitGroup', function( $timeout, textFit ) {
+angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $timeout, textFit ) {
   return {
     restrict: 'A',
 

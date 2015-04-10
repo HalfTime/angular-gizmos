@@ -1,7 +1,7 @@
 // Directive textFit attaches textFit behavior to an element.  Currently, all
 // it does is register with an ancester textFitGroup directive which handles
 // resizing it.  Behavior for it to resize itself can be added when needed.
-angular.module( 'gizmos.textFit' ).directive( 'textFit', function( $timeout, textFit ) {
+angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, textFit ) {
   return {
     restrict: 'A',
     scope: {

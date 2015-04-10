@@ -1,6 +1,6 @@
 describe( 'textFit directive', function() {
 
-  beforeEach( module( 'gizmos.textFit' ) )
+  beforeEach( module( 'gizmos.directives' ) )
 
   let render = ( text ) => {
     let template = `

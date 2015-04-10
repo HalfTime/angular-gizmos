@@ -1,6 +1,6 @@
 // Directive onChange binds to the native DOM change event, allowing it to be
 // used on <input type="file">, which ng-change does not support.
-angular.module( 'gizmos.onChange', [] ).directive( 'onChange', function( ) {
+angular.module( 'gizmos.directives' ).directive( 'onChange', function( ) {
 
   return {
     restrict: "A",

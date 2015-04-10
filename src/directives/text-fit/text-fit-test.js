@@ -1,6 +1,6 @@
 describe( 'textFit()', function() {
 
-  beforeEach( module( 'gizmos.textFit' ) )
+  beforeEach( module( 'gizmos.directives' ) )
 
   // Builds an element with a sized container and the given text
   let buildElement = ( { text } ) => {

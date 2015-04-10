@@ -1,8 +1,7 @@
-angular.module("gizmos.textFit", []);
 // Directive textFit attaches textFit behavior to an element.  Currently, all
 // it does is register with an ancester textFitGroup directive which handles
 // resizing it.  Behavior for it to resize itself can be added when needed.
-angular.module("gizmos.textFit").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
+angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",
     scope: {
@@ -77,7 +76,7 @@ angular.module("gizmos.textFit").directive("textFit", ["$timeout", "textFit", fu
 //
 // The directive knows it is time to call textFit when the `isNeeded` property
 // on the passed in model is set to true.
-angular.module("gizmos.textFit").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
+angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",
 
@@ -148,7 +147,7 @@ angular.module("gizmos.textFit").directive("textFitGroup", ["$timeout", "textFit
 // - Allows silent returns or warnings if the element has no dimensions, based
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
-angular.module("gizmos.textFit").value("textFit", function textFit(element, options, shouldWarn) {
+angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
   var min, max, mid, lastMid, containerWidth, containerHeight;
 
   element = angular.element(element);

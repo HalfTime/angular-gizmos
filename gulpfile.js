@@ -34,7 +34,7 @@ gulp.task('default', ['watch', 'test.watch'])
 gulp.task('dist', function(done) {
   runSequence(
     'clean',
-    ['dist.directives', 'dist.filters', 'dist.services', 'dist.miscScripts', 'dist.scss', 'dist.fonts'],
+    ['dist.modules', 'dist.directives', 'dist.filters', 'dist.services', 'dist.miscScripts', 'dist.scss', 'dist.fonts'],
     'dist.concat',
     done
   )
@@ -63,6 +63,12 @@ gulp.task('dist.fonts', function() {
     .pipe(gulp.dest('dist/fonts'))
 });
 
+
+gulp.task('dist.modules', function() {
+  var glob = 'src/**/_module.js'
+  return gulp.src(glob)
+    .pipe(gulp.dest('dist'))
+});
 
 gulp.task('dist.filters', function() {
   var glob = 'src/filters/**/!(*-test).js'
@@ -131,6 +137,7 @@ function runKarma( action, done ) {
     // test libs
     'bower_components/angular-mocks/angular-mocks.js',
     // implementations
+    'src/**/_module.js',
     'src/scripts/**/*',
     'src/**/!(*-test).js',
     // tests
@@ -139,7 +146,6 @@ function runKarma( action, done ) {
   ]
 
   return gulp.src(glob)
-    //.pipe(g.print())
     .pipe(g.karma({ configFile: 'karma.conf.js', action: action }, done))
     .on('error', g.util.log)
 }

@@ -1,5 +1,12 @@
-angular.module('gizmos.services', [])
+angular.module( 'gizmos.filters', [])
+angular.module( 'gizmos.services', [])
+angular.module( 'gizmos.directives', [])
 
+angular.module( 'gizmos', [
+  'gizmos.filters',
+  'gizmos.services',
+  'gizmos.directives',
+])
 
 
 // Service debounce returns a single debounce function which wraps _.debounce
@@ -547,7 +554,7 @@ _.mixin( {
 //
 //   <div background-image="{{ user.imageUrl }}"></div>
 //
-angular.module("gizmos.backgroundImage", []).directive("backgroundImage", function () {
+angular.module("gizmos.directives").directive("backgroundImage", function () {
 
   return {
     restrict: "A",
@@ -562,11 +569,32 @@ angular.module("gizmos.backgroundImage", []).directive("backgroundImage", functi
     }
   };
 });
-angular.module("gizmos.textFit", []);
+// Directive imageSrc is a helper that looks up the image's name in the
+// `Config.imageUrls` registry, and sets that as the img's src.  The map of
+// imageUrls comes from DATA which is assigned in the main application.html
+// file.  This way individual slim partials do not need to guard against the
+// rails `image_path` method being defined as karma does not have access to
+// this method.
+//
+// Usage:
+//
+//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
+//    <img image-src='logo'>
+//
+angular.module("gizmos.directives").directive("imageSrc", ["Config", function (Config) {
+  return {
+    restrict: "A",
+    link: function link($scope, element, attributes) {
+      attributes.$observe("imageSrc", function (name) {
+        attributes.$set("src", Config.imageUrls.get(name));
+      });
+    }
+  };
+}]);
 // Directive textFit attaches textFit behavior to an element.  Currently, all
 // it does is register with an ancester textFitGroup directive which handles
 // resizing it.  Behavior for it to resize itself can be added when needed.
-angular.module("gizmos.textFit").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
+angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",
     scope: {
@@ -641,7 +669,7 @@ angular.module("gizmos.textFit").directive("textFit", ["$timeout", "textFit", fu
 //
 // The directive knows it is time to call textFit when the `isNeeded` property
 // on the passed in model is set to true.
-angular.module("gizmos.textFit").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
+angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",
 
@@ -712,7 +740,7 @@ angular.module("gizmos.textFit").directive("textFitGroup", ["$timeout", "textFit
 // - Allows silent returns or warnings if the element has no dimensions, based
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
-angular.module("gizmos.textFit").value("textFit", function textFit(element, options, shouldWarn) {
+angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
   var min, max, mid, lastMid, containerWidth, containerHeight;
 
   element = angular.element(element);
@@ -759,7 +787,7 @@ angular.module("gizmos.textFit").value("textFit", function textFit(element, opti
 });
 // Directive topic ring creates created a simple donut shape using the provided
 // `color` and `percent` of topic level completed
-angular.module("gizmos.topicRing", []).directive("topicRing", ["$injector", function ($injector) {
+angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {
   return {
     templateUrl: "topic-ring.html",
     scope: {
@@ -805,26 +833,4 @@ angular.module("gizmos.topicRing", []).directive("topicRing", ["$injector", func
 }]);
 angular.module("gizmos.topicRing").run(["$templateCache", function ($templateCache) {
   $templateCache.put("topic-ring.html", "<div ng-class=\"color\" easypiechart=\"\" percent=\"percent\" options=\"chartOptions\" class=\"topic-ring\"><div ng-bind=\"level\" class=\"topic-ring-level\"></div></div>");
-}]);
-// Directive imageSrc is a helper that looks up the image's name in the
-// `Config.imageUrls` registry, and sets that as the img's src.  The map of
-// imageUrls comes from DATA which is assigned in the main application.html
-// file.  This way individual slim partials do not need to guard against the
-// rails `image_path` method being defined as karma does not have access to
-// this method.
-//
-// Usage:
-//
-//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
-//    <img image-src='logo'>
-//
-angular.module("gizmos.imageSrc", []).directive("imageSrc", ["Config", function (Config) {
-  return {
-    restrict: "A",
-    link: function link($scope, element, attributes) {
-      attributes.$observe("imageSrc", function (name) {
-        attributes.$set("src", Config.imageUrls.get(name));
-      });
-    }
-  };
 }]);
