@@ -34,7 +34,7 @@ gulp.task('default', ['watch', 'test.watch'])
 gulp.task('dist', function(done) {
   runSequence(
     'clean',
-    ['dist.directives', 'dist.filters', 'dist.miscScripts', 'dist.scss', 'dist.fonts'],
+    ['dist.directives', 'dist.filters', 'dist.services', 'dist.miscScripts', 'dist.scss', 'dist.fonts'],
     'dist.concat',
     done
   )
@@ -66,6 +66,12 @@ gulp.task('dist.fonts', function() {
 
 gulp.task('dist.filters', function() {
   var glob = 'src/filters/**/!(*-test).js'
+  return gulp.src(glob)
+    .pipe(gulp.dest('dist'))
+});
+
+gulp.task('dist.services', function() {
+  var glob = 'src/services/**/!(*-test).js'
   return gulp.src(glob)
     .pipe(gulp.dest('dist'))
 });
