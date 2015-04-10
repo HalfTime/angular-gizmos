@@ -292,6 +292,7 @@ _.mixin( {
     return new Registry( name )
   }
 
+
 } )
 
 

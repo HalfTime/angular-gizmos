@@ -5,7 +5,6 @@ var gulp = require('gulp');
 var g = require('gulp-load-plugins')({lazy: false});
 
 var fs = require('fs');
-var path = require('path');
 var runSequence = require('run-sequence');
 var mergeStream = require('merge-stream');
 var rimraf = require('rimraf');
@@ -36,14 +35,14 @@ gulp.task('default', ['dist', 'test'])
 gulp.task('dist', function(done) {
   runSequence(
     'clean',
-    ['dist.directives', 'dist.scripts', 'dist.scss', 'dist.fonts'],
+    ['dist.directives', 'dist.filters', 'dist.miscScripts', 'dist.scss', 'dist.fonts'],
     'dist.concat',
     done
   )
 })
 
 
-gulp.task("clean", function () {
+gulp.task('clean', function () {
   rimraf.sync('dist')
 })
 
@@ -66,11 +65,15 @@ gulp.task('dist.fonts', function() {
 });
 
 
-gulp.task('dist.scripts', function() {
-  var glob = [
-    'src/scripts/**/!(*-test).js',
-  ]
+gulp.task('dist.filters', function() {
+  var glob = 'src/filters/**/!(*-test).js'
+  return gulp.src(glob)
+    .pipe(g.print())
+    .pipe(gulp.dest('dist'))
+});
 
+gulp.task('dist.miscScripts', function() {
+  var glob = 'src/scripts/**/!(*-test).js'
   return gulp.src(glob)
     .pipe(gulp.dest('dist'))
 });
@@ -82,7 +85,7 @@ gulp.task('dist.directives', function() {
   return mergeStream(directories(path).map(function(directory) {
     var jadeFilter = g.filter('**/*.jade')
     var jsFilter = g.filter('**/!(*-test).js')
-    var scssFilter = g.filter('**/*.scss')
+    //var scssFilter = g.filter('**/*.scss')
     var moduleName = 'gizmos.' + camelize(directory)
 
     return gulp.src(path + directory + '/*')
@@ -96,7 +99,7 @@ gulp.task('dist.directives', function() {
         }))
         .pipe(jadeFilter.restore())
       .pipe(jsFilter)
-        .pipe(g.babel({ blacklist: ["useStrict"] }))
+        .pipe(g.babel({ blacklist: ['useStrict'] }))
         .pipe(g.ngAnnotate())
         //.pipe(g.uglify())
         .pipe(g.concat(directory + '.js'))
