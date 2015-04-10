@@ -1,9 +1,15 @@
 {
   "name": "angular-gizmos",
   "main": "dist/angular-gizmos.js",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "TODO",
-  "authors": [ "mike", "lance", "brad", "nick", "Ѱζ༼ᴼل͜ᴼ༽ᶘѰ" ],
+  "authors": [
+    "mike",
+    "lance",
+    "brad",
+    "nick",
+    "Ѱζ༼ᴼل͜ᴼ༽ᶘѰ"
+  ],
   "ignore": [
     "!dist/*.{js,css}"
   ],
