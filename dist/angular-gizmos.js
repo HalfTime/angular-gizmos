@@ -112,6 +112,28 @@ angular.module( 'gizmos.filters' ).filter( 'ordinalWord', [
   }
 ]);
 
+
+// ordinalWordTemplate takes a string and replaces instances of {n} integers with their respective ordinal word.
+//
+// Dependencies:
+//   - angular-grab-bag:filter:ordinalWord
+//
+// Usage:
+//
+//  {{ Brad is in {1} place, Andre The Giant is in {99}. | ordinalWordTemplate }}
+//    => 'Brad is in first place, Andre The Giant is in ninety-ninth.'
+//
+//  $filter( 'ordinalWordTemplate' )( 'Lance attended the {10} annual coffee convention.'
+//    => 'Lance attended the tenth annual coffee convention.'
+//
+angular.module( 'gizmos.filters' ).filter( 'ordinalWordTemplate', function( $filter ) {
+  return function ( sentence ) {
+    return sentence.replace( /\{\d+\}/g, function( token ) {
+      return $filter( 'ordinalWord' )( token.match( /\d+/ )[ 0 ] )
+    } )
+  }
+} )
+
 // Filter timesince turns a date object into a textual description of when it
 // occured.  Similar to the Rails method `time_ago_in_words`
 //
@@ -540,28 +562,6 @@ angular.module("gizmos.backgroundImage", []).directive("backgroundImage", functi
     }
   };
 });
-// Directive imageSrc is a helper that looks up the image's name in the
-// `Config.imageUrls` registry, and sets that as the img's src.  The map of
-// imageUrls comes from DATA which is assigned in the main application.html
-// file.  This way individual slim partials do not need to guard against the
-// rails `image_path` method being defined as karma does not have access to
-// this method.
-//
-// Usage:
-//
-//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
-//    <img image-src='logo'>
-//
-angular.module("gizmos.imageSrc", []).directive("imageSrc", ["Config", function (Config) {
-  return {
-    restrict: "A",
-    link: function link($scope, element, attributes) {
-      attributes.$observe("imageSrc", function (name) {
-        attributes.$set("src", Config.imageUrls.get(name));
-      });
-    }
-  };
-}]);
 angular.module("gizmos.textFit", []);
 // Directive textFit attaches textFit behavior to an element.  Currently, all
 // it does is register with an ancester textFitGroup directive which handles
@@ -805,4 +805,26 @@ angular.module("gizmos.topicRing", []).directive("topicRing", ["$injector", func
 }]);
 angular.module("gizmos.topicRing").run(["$templateCache", function ($templateCache) {
   $templateCache.put("topic-ring.html", "<div ng-class=\"color\" easypiechart=\"\" percent=\"percent\" options=\"chartOptions\" class=\"topic-ring\"><div ng-bind=\"level\" class=\"topic-ring-level\"></div></div>");
+}]);
+// Directive imageSrc is a helper that looks up the image's name in the
+// `Config.imageUrls` registry, and sets that as the img's src.  The map of
+// imageUrls comes from DATA which is assigned in the main application.html
+// file.  This way individual slim partials do not need to guard against the
+// rails `image_path` method being defined as karma does not have access to
+// this method.
+//
+// Usage:
+//
+//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
+//    <img image-src='logo'>
+//
+angular.module("gizmos.imageSrc", []).directive("imageSrc", ["Config", function (Config) {
+  return {
+    restrict: "A",
+    link: function link($scope, element, attributes) {
+      attributes.$observe("imageSrc", function (name) {
+        attributes.$set("src", Config.imageUrls.get(name));
+      });
+    }
+  };
 }]);
