@@ -3,9 +3,7 @@
   "main": "dist/angular-gizmos.js",
   "version": "2.2.0",
   "description": "TODO",
-  "authors": [
-    "Ѱζ༼ᴼل͜ᴼ༽ᶘѰ"
-  ],
+  "authors": [ "mike", "lance", "brad", "nick", "Ѱζ༼ᴼل͜ᴼ༽ᶘѰ" ],
   "ignore": [
     "!dist/*.{js,css}"
   ],
