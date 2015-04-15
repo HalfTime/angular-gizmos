@@ -1,7 +1,7 @@
 {
   "name": "angular-gizmos",
   "main": "dist/angular-gizmos.js",
-  "version": "2.5.0",
+  "version": "2.5.2",
   "description": "TODO",
   "authors": [
     "mike",
