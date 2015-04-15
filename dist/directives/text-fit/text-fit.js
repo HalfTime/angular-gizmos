@@ -54,7 +54,7 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
           fontSize = textFit($element, $scope.textFitOptions, isLastRetry);
         }
 
-        if (!fontSize) {
+        if (!fontSize && !isLastRetry) {
           retryCount += 1;
           $timeout(doTextFit, retryInterval, false);
           return;
