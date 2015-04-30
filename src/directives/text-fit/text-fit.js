@@ -40,7 +40,9 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
     var width = element[0].offsetWidth
     var height = element[0].offsetHeight
     var isTooBig = ( height > containerHeight || width > containerWidth )
-    //console.log( '[text-fit] %sx%s in %sx%s. %s < (%s) < %s - %s', width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? 'too big' : 'too small' )
+    if( options.debug ) {
+      console.log( '[text-fit] %sx%s in %sx%s. %s < (%s) < %s - %s', width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? 'too big' : 'too small' )
+    }
 
     if( !width || !height ) {
       if( shouldWarn ) {
