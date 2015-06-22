@@ -58,9 +58,7 @@ $breakpoints: (
     $min-width: $name-or-min-width;
   }
   @else {
-    @error("No breakpoint named '" + $name-or-min-width + "' in $breakpoints.
-Available breakpoints: '" + inspect($breakpoints) + "'.
-You can also pass in a value like '500px'.");
+    @error("No breakpoint named '" + $name-or-min-width + "' in $breakpoints.  Available breakpoints: '" + inspect($breakpoints) + "'.  You can also pass in a value like '500px'.");
   }
 
   @media only screen and ( min-width: $min-width ) {
