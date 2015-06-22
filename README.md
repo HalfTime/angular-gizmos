@@ -1,24 +1,25 @@
 angular-gizmos
 ============
 
-TODO:
-
-- move over grab-bag stuff
-- update readme
-- kill gulpfile2
-- add gulp bump task
-- cleanup dist / release task
-- rename topic ring => level ring
-- include parts of gulpfile
-- include git commit message hooks
-
 
 ## Development
 
-To start developing in the project run:
+First let's check out this project with:
 
 ```bash
-gulp serve
+  git clone https://github.com/HalfTime/angular-gizmos.git
+```
+
+To start developing in the project run, first grab the bower dependencies:
+
+```bash
+  bower install
+```
+
+then
+
+```bash
+gulp
 ```
 
 Then head to `http://localhost:3000` in your browser.
@@ -54,3 +55,13 @@ gulp dist
 ```
 
 Now there's a `./dist` folder with all scripts and stylesheets concatenated and minified, also third party libraries installed with bower will be concatenated and minified into `vendors.min.js` and `vendors.min.css` respectively.
+
+## Todo
+
+- [ ] move over grab-bag stuff
+- [ ] update readme
+- [ ] add gulp bump task
+- [ ] cleanup dist / release task
+- [ ] rename topic ring => level ring
+- [ ] include parts of gulpfile
+- [ ] include git commit message hooks
