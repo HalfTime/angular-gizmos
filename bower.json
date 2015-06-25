@@ -1,6 +1,9 @@
 {
   "name": "angular-gizmos",
-  "main": "dist/angular-gizmos.js",
+  "main": [
+    "dist/angular-gizmos.js",
+    "dist/angular-gizmos.scss"
+  ],
   "version": "2.5.5",
   "description": "TODO",
   "authors": [
