@@ -149,14 +149,15 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
-  var min, max, mid, lastMid, containerWidth, containerHeight;
+  var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox;
 
   element = angular.element(element);
   options = options || {};
 
   // Min and max font size.
+  projectedPercentageOfBox = options.projectedPercentageOfBox || 0.87;
   min = options.min || 6;
-  max = options.max || 20;
+  max = Math.floor(Math.min(element.parent()[0].offsetHeight / element.text().split(" ").length, options.max || 20) * projectedPercentageOfBox * 10) / 10;
 
   containerWidth = element.parent()[0].offsetWidth;
   containerHeight = element.parent()[0].offsetHeight;
