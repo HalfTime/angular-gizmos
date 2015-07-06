@@ -578,31 +578,6 @@ _.mixin( {
 
 
 
-// Directive backgroundImage works like ng-src, except setting the image url as
-// a background-image.  This allows using `background-size: contain|cover`,
-// which allow flexible sized images that maintain their aspect ratios, but
-// unlike using <img> with a set max-width and max-height, both dimensions will
-// stop flexing once either max is reached.
-//
-// Remember to interpolate the url.  Usage:
-//
-//   <div background-image="{{ user.imageUrl }}"></div>
-//
-angular.module("gizmos.directives").directive("backgroundImage", function () {
-
-  return {
-    restrict: "A",
-    link: function link($scope, $element, attributes) {
-      attributes.$observe("backgroundImage", function (url) {
-        if (!url) {
-          return;
-        }
-
-        $element.css("background-image", "url(" + url + ")");
-      });
-    }
-  };
-});
 // Directive imageSrc is a helper that looks up the image's name in the
 // `Config.imageUrls` registry, and sets that as the img's src.  The map of
 // imageUrls comes from DATA which is assigned in the main application.html
@@ -674,8 +649,8 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         var fontSize = undefined;
         var isLastRetry = retryCount >= maxRetryCount;
 
-        // Much faster check then `:visible`, though not as robust.
-        var isVisible = !$element.closest(".ng-hide").length;
+        // Check if item is visible.
+        var isVisible = !($element[0].offsetHeight === 0);
 
         if (isVisible) {
           fontSize = textFit($element, $scope.textFitOptions, isLastRetry);
@@ -692,7 +667,8 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         }
       };
 
-      initialize();
+      // Timeout so that view initially renders mostly so we know if it is hidden.
+      $timeout(initialize);
     } };
 }]);
 // Directive textFitGroup coordinates between multiple child textFit directive
@@ -820,6 +796,31 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   }
 
   return mid;
+});
+// Directive backgroundImage works like ng-src, except setting the image url as
+// a background-image.  This allows using `background-size: contain|cover`,
+// which allow flexible sized images that maintain their aspect ratios, but
+// unlike using <img> with a set max-width and max-height, both dimensions will
+// stop flexing once either max is reached.
+//
+// Remember to interpolate the url.  Usage:
+//
+//   <div background-image="{{ user.imageUrl }}"></div>
+//
+angular.module("gizmos.directives").directive("backgroundImage", function () {
+
+  return {
+    restrict: "A",
+    link: function link($scope, $element, attributes) {
+      attributes.$observe("backgroundImage", function (url) {
+        if (!url) {
+          return;
+        }
+
+        $element.css("background-image", "url(" + url + ")");
+      });
+    }
+  };
 });
 // Directive topic ring creates created a simple donut shape using the provided
 // `color` and `percent` of topic level completed

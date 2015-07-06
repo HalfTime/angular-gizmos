@@ -47,8 +47,8 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         var fontSize = undefined;
         var isLastRetry = retryCount >= maxRetryCount;
 
-        // Much faster check then `:visible`, though not as robust.
-        var isVisible = !$element.closest(".ng-hide").length;
+        // Check if item is visible.
+        var isVisible = !($element[0].offsetHeight === 0);
 
         if (isVisible) {
           fontSize = textFit($element, $scope.textFitOptions, isLastRetry);
@@ -65,7 +65,8 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         }
       };
 
-      initialize();
+      // Timeout so that view initially renders mostly so we know if it is hidden.
+      $timeout(initialize);
     } };
 }]);
 // Directive textFitGroup coordinates between multiple child textFit directive
