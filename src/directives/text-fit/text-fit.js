@@ -35,7 +35,7 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
       break
     }
 
-    element.css( 'font-size', mid )
+    element.css( 'font-size', mid+'px' )
 
     // Use scroll width because it checks for overflow text
     var width = element[0].scrollWidth
