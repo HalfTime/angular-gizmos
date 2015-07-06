@@ -625,6 +625,55 @@ angular.module("gizmos.directives").directive("imageSrc", ["Config", function (C
     }
   };
 }]);
+// Directive topic ring creates created a simple donut shape using the provided
+// `color` and `percent` of topic level completed
+angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {
+  return {
+    templateUrl: "topic-ring.html",
+    scope: {
+      topic: "=" },
+
+    link: {
+      pre: function pre($scope) {
+        $scope.color = null;
+        $scope.level = null;
+        $scope.percent = null;
+
+        $scope.chartOptions = {
+          barColor: "#408bdc",
+          trackColor: "#e6e6e6",
+          scaleColor: "#dfe0e0",
+          scaleLength: 0,
+          lineCap: "",
+          lineWidth: 3,
+          size: 35,
+          rotate: 0,
+          animate: {
+            duration: 1500,
+            enabled: true
+          }
+        };
+
+        $scope.$watch("topic", _.skipNulls(function (topic) {
+          $scope.color = topic.color;
+          if (topic.quizExperienceForUser) {
+            var Experience = $injector.get("Experience");
+            $scope.percent = Experience.levelCompletion(topic.quizExperienceForUser) * 100;
+            $scope.level = Experience.levelNumber(topic.quizExperienceForUser);
+          } else {
+            $scope.percent = 100;
+            $scope.level = "";
+          }
+        }));
+      }
+
+    }
+
+  };
+}]);
+angular.module("gizmos.directives").run(["$templateCache", function ($templateCache) {
+  $templateCache.put("topic-ring.html", "<div ng-class=\"color\" easypiechart=\"\" percent=\"percent\" options=\"chartOptions\" class=\"topic-ring\"><div ng-bind=\"level\" class=\"topic-ring-level\"></div></div>");
+}]);
 // Directive textFit attaches textFit behavior to an element.  Currently, all
 // it does is register with an ancester textFitGroup directive which handles
 // resizing it.  Behavior for it to resize itself can be added when needed.
@@ -785,8 +834,8 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   min = options.min || 6;
   max = options.max || 20;
 
-  containerWidth = element.parent().width();
-  containerHeight = element.parent().height();
+  containerWidth = element.parent()[0].offsetWidth;
+  containerHeight = element.parent()[0].offsetHeight;
 
   // Do a binary search for the best font size
   while (min <= max) {
@@ -799,7 +848,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
     element.css("font-size", mid + "px");
 
-    // Use scroll width because it checks for overflow text
+    // Use scrollWidth because it checks for overflow text
     var width = element[0].scrollWidth;
     var height = element[0].offsetHeight;
     var isTooBig = height > containerHeight || width > containerWidth;
@@ -823,52 +872,3 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   return mid;
 });
-// Directive topic ring creates created a simple donut shape using the provided
-// `color` and `percent` of topic level completed
-angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {
-  return {
-    templateUrl: "topic-ring.html",
-    scope: {
-      topic: "=" },
-
-    link: {
-      pre: function pre($scope) {
-        $scope.color = null;
-        $scope.level = null;
-        $scope.percent = null;
-
-        $scope.chartOptions = {
-          barColor: "#408bdc",
-          trackColor: "#e6e6e6",
-          scaleColor: "#dfe0e0",
-          scaleLength: 0,
-          lineCap: "",
-          lineWidth: 3,
-          size: 35,
-          rotate: 0,
-          animate: {
-            duration: 1500,
-            enabled: true
-          }
-        };
-
-        $scope.$watch("topic", _.skipNulls(function (topic) {
-          $scope.color = topic.color;
-          if (topic.quizExperienceForUser) {
-            var Experience = $injector.get("Experience");
-            $scope.percent = Experience.levelCompletion(topic.quizExperienceForUser) * 100;
-            $scope.level = Experience.levelNumber(topic.quizExperienceForUser);
-          } else {
-            $scope.percent = 100;
-            $scope.level = "";
-          }
-        }));
-      }
-
-    }
-
-  };
-}]);
-angular.module("gizmos.directives").run(["$templateCache", function ($templateCache) {
-  $templateCache.put("topic-ring.html", "<div ng-class=\"color\" easypiechart=\"\" percent=\"percent\" options=\"chartOptions\" class=\"topic-ring\"><div ng-bind=\"level\" class=\"topic-ring-level\"></div></div>");
-}]);
