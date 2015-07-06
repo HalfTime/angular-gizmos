@@ -150,6 +150,8 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox, accuracy;
 
   element = angular.element(element);
+
+  // ToDo: get options from text-fit-group
   options = options || {};
 
   accuracy = options.accuracy || 0.5;
@@ -165,7 +167,9 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   min = options.min || 6;
   max = Math.min(containerHeight / element.text().split(" ").length, options.max) || 20;
 
-  // Its assumed that initail mid should be as big as possible since most answers will fit into regular sizes words or phrases.
+  // Its assumed that initial mid should be as big as possible since most
+  // answers will fit into regular sizes words or phrases. Size is determines by
+  // container height devided by how many spaces used.
   mid = Math.floor(Math.min(containerHeight / element.text().split(" ").length, options.max || 20) * projectedPercentageOfBox * 10) / 10;
 
   // Do a binary search for the best font size
