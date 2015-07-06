@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+		<script src="/dist/angular-gizmos.js"></script>
+	
+		<script>
+
+
+			
+
+			var myApp = angular.module('myApp', ['gizmos.directives'])
+			
+			myApp.controller('myController', function($scope, $timeout){
+			  $scope.myText1="Hello BigFatLongText withAThirdLine"
+			  $scope.myText2="Hello Josephus"
+			  $scope.myText3="Hello"
+			  $scope.myText4="JustABigDumbWord"
+			  
+			  $scope.height = 100
+			  $scope.width = 200
+			  
+			  $scope.doStuff = function(){
+			    $timeout( function() {
+			      $scope.$broadcast('textFit')
+			    })
+			  }
+			})			
+			
+		</script>
+	
+		<style>
+			.my-box {
+			  display: flex;
+			  height: 100px;
+			  width: 320px;
+			  border: 1px solid green;
+			  margin: 20px auto;
+			  justify-content: center;
+			  align-items: center;
+			}
+			
+			.my-text {
+			  text-align: center;
+			}
+		</style>
+	
+	
+	</head>
+	<body ng-app="myApp">
+
+		<div ng-controller="myController">Width:
+		  <input type="number" ng-model="width" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>Height:
+		  <input type="number" ng-model="height" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>Adjust height and width of the parent container<br/>Text In Box 1:
+		  <input ng-model="myText1"/>
+		  <hr/>
+		  <div text-fit-gxroup="" class="group">
+		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		      <div text-fit="myText1" text-fit-options="{ max:190, debug:true }" class="my-text"></div>
+		    </div>
+		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		      <div text-fit="myText2" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
+		    </div>
+		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		      <div text-fit="myText3" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
+		    </div>
+		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		      <div text-fit="myText4" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
+		    </div>
+		  </div>
+		</div>
+
+	</body>
+</html>
