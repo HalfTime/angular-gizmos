@@ -20,6 +20,8 @@
 			  
 			  $scope.height = 100
 			  $scope.width = 200
+			  $scope.padding = 0
+			  
 			  
 			  $scope.doStuff = function(){
 			    $timeout( function() {
@@ -50,22 +52,23 @@
 	</head>
 	<body ng-app="myApp">
 
-		<div ng-controller="myController">Width:
-		  <input type="number" ng-model="width" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>Height:
-		  <input type="number" ng-model="height" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>Adjust height and width of the parent container<br/>Text In Box 1:
-		  <input ng-model="myText1"/>
+		<div ng-controller="myController">
+		  Width: <input type="number" ng-model="width" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
+		  Height: <input type="number" ng-model="height" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
+		  Padding: <input type="number" ng-model="padding" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>
+		  Text In Box 1: <input ng-model="myText1"/> Debug: <input type="checkbox" ng-model="debugMyText1">
 		  <hr/>
 		  <div text-fit-group="" class="group">
-		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
-		      <div text-fit="myText1" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
+		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+		      <div text-fit="myText1" text-fit-options="{ max:190, debug:debugMyText1 }" class="my-text"></div>
 		    </div>
-		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
 		      <div text-fit="myText2" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
 		    </div>
-		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
 		      <div text-fit="myText3" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
 		    </div>
-		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
 		      <div ng-hide="true" text-fit="myText4" text-fit-options="{ max:190, debug:true }" class="my-text"></div>
 		    </div>
 		  </div>

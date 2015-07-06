@@ -578,6 +578,28 @@ _.mixin( {
 
 
 
+// Directive imageSrc is a helper that looks up the image's name in the
+// `Config.imageUrls` registry, and sets that as the img's src.  The map of
+// imageUrls comes from DATA which is assigned in the main application.html
+// file.  This way individual slim partials do not need to guard against the
+// rails `image_path` method being defined as karma does not have access to
+// this method.
+//
+// Usage:
+//
+//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
+//    <img image-src='logo'>
+//
+angular.module("gizmos.directives").directive("imageSrc", ["Config", function (Config) {
+  return {
+    restrict: "A",
+    link: function link($scope, element, attributes) {
+      attributes.$observe("imageSrc", function (name) {
+        attributes.$set("src", Config.imageUrls.get(name));
+      });
+    }
+  };
+}]);
 // Directive backgroundImage works like ng-src, except setting the image url as
 // a background-image.  This allows using `background-size: contain|cover`,
 // which allow flexible sized images that maintain their aspect ratios, but
@@ -752,10 +774,12 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
-  var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox;
+  var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox, accuracy;
 
   element = angular.element(element);
   options = options || {};
+
+  accuracy = options.accuracy || 0.5;
 
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
   // in padding and such. Slower probably not an issue since the container is
@@ -772,7 +796,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   mid = Math.floor(Math.min(containerHeight / element.text().split(" ").length, options.max || 20) * projectedPercentageOfBox * 10) / 10;
 
   // Do a binary search for the best font size
-  while (min <= max) {
+  while (min + accuracy <= max) {
 
     element.css("font-size", mid + "px");
 
@@ -807,28 +831,6 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   return mid;
 });
-// Directive imageSrc is a helper that looks up the image's name in the
-// `Config.imageUrls` registry, and sets that as the img's src.  The map of
-// imageUrls comes from DATA which is assigned in the main application.html
-// file.  This way individual slim partials do not need to guard against the
-// rails `image_path` method being defined as karma does not have access to
-// this method.
-//
-// Usage:
-//
-//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
-//    <img image-src='logo'>
-//
-angular.module("gizmos.directives").directive("imageSrc", ["Config", function (Config) {
-  return {
-    restrict: "A",
-    link: function link($scope, element, attributes) {
-      attributes.$observe("imageSrc", function (name) {
-        attributes.$set("src", Config.imageUrls.get(name));
-      });
-    }
-  };
-}]);
 // Directive topic ring creates created a simple donut shape using the provided
 // `color` and `percent` of topic level completed
 angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {

@@ -147,10 +147,12 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
-  var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox;
+  var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox, accuracy;
 
   element = angular.element(element);
   options = options || {};
+
+  accuracy = options.accuracy || 0.5;
 
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
   // in padding and such. Slower probably not an issue since the container is
@@ -167,7 +169,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   mid = Math.floor(Math.min(containerHeight / element.text().split(" ").length, options.max || 20) * projectedPercentageOfBox * 10) / 10;
 
   // Do a binary search for the best font size
-  while (min <= max) {
+  while (min + accuracy <= max) {
 
     element.css("font-size", mid + "px");
 
