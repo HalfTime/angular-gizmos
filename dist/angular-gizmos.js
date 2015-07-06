@@ -781,16 +781,19 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   element = angular.element(element);
   options = options || {};
 
+  // This is slow but WAY more reliable than el.scrollWidth. This method factors
+  // in padding and such. Slower probably not an issue since the container is
+  // only computed once.
+  containerWidth = parseInt(window.getComputedStyle(element.parent()[0]).width, 10);
+  containerHeight = parseInt(window.getComputedStyle(element.parent()[0]).height, 10);
+
   // Min and max font size.
   projectedPercentageOfBox = options.projectedPercentageOfBox || 0.87;
   min = options.min || 6;
-  max = Math.min(element.parent()[0].offsetHeight / element.text().split(" ").length, options.max) || 20;
+  max = Math.min(containerHeight / element.text().split(" ").length, options.max) || 20;
 
   // Its assumed that initail mid should be as big as possible since most answers will fit into regular sizes words or phrases.
-  mid = Math.floor(Math.min(element.parent()[0].offsetHeight / element.text().split(" ").length, options.max || 20) * projectedPercentageOfBox * 10) / 10;
-
-  containerWidth = element.parent()[0].offsetWidth;
-  containerHeight = element.parent()[0].offsetHeight;
+  mid = Math.floor(Math.min(containerHeight / element.text().split(" ").length, options.max || 20) * projectedPercentageOfBox * 10) / 10;
 
   // Do a binary search for the best font size
   while (min <= max) {
