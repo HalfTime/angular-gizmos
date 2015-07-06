@@ -724,23 +724,20 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
             _this.recentRelayoutFontSizes = [];
           });
         }
-      };
+      }
 
       // Calls textFit on each element, then finds the smallest font size
       // amongst all elements and sizes them all to that size.
-      this.resizeElements = function () {
-        var fontSizes, smallestFontSize;
+      // this.resizeElements = function() {
+      //   var fontSizes, smallestFontSize
 
-        fontSizes = this.elements.map(function (el) {
-          return textFit(el);
-        });
-        smallestFontSize = _.min(fontSizes);
-        console.log("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
+      //   fontSizes = this.elements.map( ( el ) => textFit( el ) )
+      //   smallestFontSize = _.min( fontSizes )
+      //   console.log( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
 
-        this.elements.forEach(function (el) {
-          return el.css("font-size", smallestFontSize);
-        });
-      };
+      //   this.elements.forEach( ( el ) => el.css( 'font-size', smallestFontSize ) )
+      // }
+      ;
     }] };
 }]);
 // Value textFit is the core text resizing function to scale up the font-size
