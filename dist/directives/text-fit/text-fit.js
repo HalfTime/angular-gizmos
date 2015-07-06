@@ -96,8 +96,6 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
             });
             _this.recentRelayoutFontSizes = [];
           });
-        } else {
-          _this.resizeElements();
         }
       };
 

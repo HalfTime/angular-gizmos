@@ -38,22 +38,20 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
             this.elements.forEach( ( el ) => el.css( 'font-size', minFontSize ) )
             this.recentRelayoutFontSizes = []
           } )
-        } else {
-          this.resizeElements()
-        }
+        } 
       }
 
       // Calls textFit on each element, then finds the smallest font size
       // amongst all elements and sizes them all to that size.
-      this.resizeElements = function() {
-        var fontSizes, smallestFontSize
+      // this.resizeElements = function() {
+      //   var fontSizes, smallestFontSize
 
-        fontSizes = this.elements.map( ( el ) => textFit( el ) )
-        smallestFontSize = _.min( fontSizes )
-        console.log( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
+      //   fontSizes = this.elements.map( ( el ) => textFit( el ) )
+      //   smallestFontSize = _.min( fontSizes )
+      //   console.log( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
 
-        this.elements.forEach( ( el ) => el.css( 'font-size', smallestFontSize ) )
-      }
+      //   this.elements.forEach( ( el ) => el.css( 'font-size', smallestFontSize ) )
+      // }
     },
 
   }
