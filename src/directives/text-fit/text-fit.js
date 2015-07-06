@@ -22,19 +22,15 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   // Min and max font size.
   projectedPercentageOfBox = options.projectedPercentageOfBox || .87 
   min = options.min || 6
-  max = Math.floor(Math.min(element.parent()[0].offsetHeight / element.text().split(' ').length, options.max || 20) * projectedPercentageOfBox * 10) / 10
-
+  max = Math.min(element.parent()[0].offsetHeight / element.text().split(' ').length, options.max) || 20;
+  mid = Math.floor(Math.min(element.parent()[0].offsetHeight / element.text().split(' ').length, options.max || 20) * projectedPercentageOfBox * 10) / 10
+  
   containerWidth = element.parent()[0].offsetWidth;
   containerHeight = element.parent()[0].offsetHeight;
   
   // Do a binary search for the best font size
   while ( min <= max ) {
-    lastMid = mid
-    mid = Math.floor( ( min + max ) / 2 * 10 ) / 10
 
-    if( mid === lastMid ) {
-      break
-    }
 
     element.css( 'font-size', mid+'px' )
 
@@ -58,6 +54,15 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
     } else {
       min = mid;
     }
+    
+    lastMid = mid
+    mid = Math.floor( ( min + max ) / 2 * 10 ) / 10
+
+    if( mid === lastMid ) {
+      break
+    }
+
+    
   }
 
   return mid
