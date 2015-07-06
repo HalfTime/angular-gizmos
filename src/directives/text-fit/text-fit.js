@@ -23,6 +23,8 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   projectedPercentageOfBox = options.projectedPercentageOfBox || .87 
   min = options.min || 6
   max = Math.min(element.parent()[0].offsetHeight / element.text().split(' ').length, options.max) || 20;
+  
+  // Its assumed that initail mid should be as big as possible since most answers will fit into regular sizes words or phrases.
   mid = Math.floor(Math.min(element.parent()[0].offsetHeight / element.text().split(' ').length, options.max || 20) * projectedPercentageOfBox * 10) / 10
   
   containerWidth = element.parent()[0].offsetWidth;
