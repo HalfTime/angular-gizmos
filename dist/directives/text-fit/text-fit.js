@@ -1,6 +1,4 @@
-// Directive textFit attaches textFit behavior to an element.  Currently, all
-// it does is register with an ancester textFitGroup directive which handles
-// resizing it.  Behavior for it to resize itself can be added when needed.
+// Directive textFit attaches textFit behavior to an element. 
 angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",

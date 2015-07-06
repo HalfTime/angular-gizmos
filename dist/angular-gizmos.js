@@ -603,31 +603,7 @@ angular.module("gizmos.directives").directive("backgroundImage", function () {
     }
   };
 });
-// Directive imageSrc is a helper that looks up the image's name in the
-// `Config.imageUrls` registry, and sets that as the img's src.  The map of
-// imageUrls comes from DATA which is assigned in the main application.html
-// file.  This way individual slim partials do not need to guard against the
-// rails `image_path` method being defined as karma does not have access to
-// this method.
-//
-// Usage:
-//
-//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
-//    <img image-src='logo'>
-//
-angular.module("gizmos.directives").directive("imageSrc", ["Config", function (Config) {
-  return {
-    restrict: "A",
-    link: function link($scope, element, attributes) {
-      attributes.$observe("imageSrc", function (name) {
-        attributes.$set("src", Config.imageUrls.get(name));
-      });
-    }
-  };
-}]);
-// Directive textFit attaches textFit behavior to an element.  Currently, all
-// it does is register with an ancester textFitGroup directive which handles
-// resizing it.  Behavior for it to resize itself can be added when needed.
+// Directive textFit attaches textFit behavior to an element. 
 angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",
@@ -831,6 +807,28 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   return mid;
 });
+// Directive imageSrc is a helper that looks up the image's name in the
+// `Config.imageUrls` registry, and sets that as the img's src.  The map of
+// imageUrls comes from DATA which is assigned in the main application.html
+// file.  This way individual slim partials do not need to guard against the
+// rails `image_path` method being defined as karma does not have access to
+// this method.
+//
+// Usage:
+//
+//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
+//    <img image-src='logo'>
+//
+angular.module("gizmos.directives").directive("imageSrc", ["Config", function (Config) {
+  return {
+    restrict: "A",
+    link: function link($scope, element, attributes) {
+      attributes.$observe("imageSrc", function (name) {
+        attributes.$set("src", Config.imageUrls.get(name));
+      });
+    }
+  };
+}]);
 // Directive topic ring creates created a simple donut shape using the provided
 // `color` and `percent` of topic level completed
 angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {
