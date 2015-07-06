@@ -6,17 +6,11 @@
 //
 // The directive knows it is time to call textFit when the `isNeeded` property
 // on the passed in model is set to true.
-angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $timeout, textFit ) {
+angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $timeout, $parse, textFit ) {
   return {
     restrict: 'A',
-    scope: {
-      textFitGroup:'='
-    },
     controller: function($scope) {
       
-      
-      this.active = $scope.textFitGroup || true
-           
       // The child textFit elements that have registered with us through a
       // textFit directive.
       this.elements = []

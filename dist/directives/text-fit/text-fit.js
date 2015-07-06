@@ -1,5 +1,5 @@
 // Directive textFit attaches textFit behavior to an element. 
-angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
+angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", "$parse", function ($timeout, textFit, $parse) {
   return {
     restrict: "A",
     scope: {
@@ -12,9 +12,7 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
       var initialize = function () {
         var deregisterFn;
 
-        console.info(textFitGroup);
-
-        if (textFitGroup && textFitGroup.active) {
+        if (textFitGroup) {
           // Register with our parent text fit group
           deregisterFn = textFitGroup.add($element);
         }
@@ -37,27 +35,13 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         doTextFit();
       };
 
-      // If an element is not visible it will appear to be 0x0 and not re-size
-      // properly.  This is common if the element or its ancestor is ng-hidden.
-      var retryCount = 0;
-      var maxRetryCount = 10;
-      var retryInterval = 35;
-
       var doTextFit = function () {
-        var fontSize = undefined;
-        var isLastRetry = retryCount >= maxRetryCount;
 
         // Check if item is visible.
         var isVisible = !($element[0].offsetHeight === 0);
 
         if (isVisible) {
-          fontSize = textFit($element, $scope.textFitOptions, isLastRetry);
-        }
-
-        if (!fontSize && !isLastRetry) {
-          retryCount += 1;
-          $timeout(doTextFit, retryInterval, false);
-          return;
+          fontSize = textFit($element, $scope.textFitOptions);
         }
 
         if (textFitGroup) {
@@ -77,16 +61,11 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
 //
 // The directive knows it is time to call textFit when the `isNeeded` property
 // on the passed in model is set to true.
-angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
+angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$parse", "textFit", function ($timeout, $parse, textFit) {
   return {
     restrict: "A",
-    scope: {
-      textFitGroup: "="
-    },
     controller: ["$scope", function controller($scope) {
       var _this = this;
-
-      this.active = $scope.textFitGroup || true;
 
       // The child textFit elements that have registered with us through a
       // textFit directive.

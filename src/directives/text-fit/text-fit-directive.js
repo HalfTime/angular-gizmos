@@ -1,5 +1,5 @@
 // Directive textFit attaches textFit behavior to an element.  
-angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, textFit ) {
+angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, textFit, $parse ) {
   return {
     restrict: 'A',
     scope: {
@@ -8,13 +8,11 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
     },
     require: '^?textFitGroup',
 
-    link: function( $scope, $element, $attributes, textFitGroup ) {
+    link: function( $scope, $element, $attributes, textFitGroup ) {      
       let initialize = () => {
         var deregisterFn
 
-        console.info(textFitGroup)
-
-        if( textFitGroup && textFitGroup.active) {
+        if( textFitGroup ) {
           // Register with our parent text fit group
           deregisterFn = textFitGroup.add( $element )
         }
@@ -37,27 +35,13 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
         doTextFit()
       }
 
-      // If an element is not visible it will appear to be 0x0 and not re-size
-      // properly.  This is common if the element or its ancestor is ng-hidden.
-      let retryCount = 0
-      let maxRetryCount = 10
-      let retryInterval = 35
-
       var doTextFit = () => {
-        let fontSize
-        let isLastRetry = ( retryCount >= maxRetryCount )
 
         // Check if item is visible. 
         let isVisible = !($element[0].offsetHeight === 0)
 
         if( isVisible ) {
-          fontSize = textFit( $element, $scope.textFitOptions, isLastRetry )
-        }
-
-        if( !fontSize && !isLastRetry ) {
-          retryCount += 1
-          $timeout( doTextFit, retryInterval, false )
-          return
+          fontSize = textFit( $element, $scope.textFitOptions )
         }
 
         if( textFitGroup ) {

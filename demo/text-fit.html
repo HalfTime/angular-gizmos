@@ -7,9 +7,6 @@
 	
 		<script>
 
-
-			
-
 			var myApp = angular.module('myApp', ['gizmos.directives'])
 			
 			myApp.controller('myController', function($scope, $timeout){
@@ -22,6 +19,9 @@
 			  $scope.width = 200
 			  $scope.padding = 0
 			  
+			  $scope.debugMyText1 = false;
+			  
+			  $scope.useTextGroup = false
 			  
 			  $scope.doStuff = function(){
 			    $timeout( function() {
@@ -50,29 +50,43 @@
 	
 	
 	</head>
-	<body ng-app="myApp">
+	<body ng-app="myApp" ng-controller="myController">
 
-		<div ng-controller="myController">
+		<div>
 		  Width: <input type="number" ng-model="width" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
 		  Height: <input type="number" ng-model="height" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
 		  Padding: <input type="number" ng-model="padding" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>
-		  Text In Box 1: <input ng-model="myText1"/> Debug: <input type="checkbox" ng-model="debugMyText1">
+		  Text In Box 1: <input ng-model="myText1"/> Console Output: <input type="checkbox" ng-model="debugMyText1">
 		  <hr/>
-		  <div text-fit-group="" class="group">
+		  <h1>Using Text Group</h1>
+		  <div text-fit-group="{debug: true}" class="group">
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-		      <div text-fit="myText1" text-fit-options="{ max:190, debug:debugMyText1 }" class="my-text"></div>
+		      <div text-fit="myText1" text-fit-options="{ max:190, debug: debugMyText1 }" class="my-text"></div>
 		    </div>
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-		      <div text-fit="myText2" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
+		      <div text-fit="myText2" text-fit-options="{ max:190 }" class="my-text"></div>
 		    </div>
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-		      <div text-fit="myText3" text-fit-options="{ max:190, debug:false }" class="my-text"></div>
+		      <div text-fit="myText3" text-fit-options="{ max:190 }" class="my-text"></div>
 		    </div>
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-		      <div ng-hide="true" text-fit="myText4" text-fit-options="{ max:190, debug:true }" class="my-text"></div>
+		      <div ng-hide="false" text-fit="myText4" text-fit-options="{ max:190 }" class="my-text"></div>
 		    </div>
 		  </div>
 		</div>
-
+		<hr>
+		<h1>Not Using Text Group</h1>
+	    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+	      <div ng-hide="false" text-fit="myText4" text-fit-options="{ max:190, debug: false }" class="my-text"></div>
+	    </div>
+		<hr>
+		<h1>Not Using Text Group has parent ancestor hidden<br><small>Has debug = true, so you should see nothing in console signifing the directive is not running.</small></h1>
+	    <div ng-hide="true">
+			<div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+		      <div ng-hide="false" text-fit="myText4" text-fit-options="{ max:190, debug: true }" class="my-text"></div>
+		    </div>
+	    </div>		
+		
+		
 	</body>
 </html>

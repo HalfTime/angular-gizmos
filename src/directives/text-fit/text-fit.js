@@ -20,7 +20,7 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   
   // ToDo: get options from text-fit-group
   options = options || {}
-
+  
   accuracy = options.accuracy || .5
   
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
