@@ -578,28 +578,6 @@ _.mixin( {
 
 
 
-// Directive imageSrc is a helper that looks up the image's name in the
-// `Config.imageUrls` registry, and sets that as the img's src.  The map of
-// imageUrls comes from DATA which is assigned in the main application.html
-// file.  This way individual slim partials do not need to guard against the
-// rails `image_path` method being defined as karma does not have access to
-// this method.
-//
-// Usage:
-//
-//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
-//    <img image-src='logo'>
-//
-angular.module("gizmos.directives").directive("imageSrc", ["Config", function (Config) {
-  return {
-    restrict: "A",
-    link: function link($scope, element, attributes) {
-      attributes.$observe("imageSrc", function (name) {
-        attributes.$set("src", Config.imageUrls.get(name));
-      });
-    }
-  };
-}]);
 // Directive backgroundImage works like ng-src, except setting the image url as
 // a background-image.  This allows using `background-size: contain|cover`,
 // which allow flexible sized images that maintain their aspect ratios, but
@@ -625,54 +603,27 @@ angular.module("gizmos.directives").directive("backgroundImage", function () {
     }
   };
 });
-// Directive topic ring creates created a simple donut shape using the provided
-// `color` and `percent` of topic level completed
-angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {
+// Directive imageSrc is a helper that looks up the image's name in the
+// `Config.imageUrls` registry, and sets that as the img's src.  The map of
+// imageUrls comes from DATA which is assigned in the main application.html
+// file.  This way individual slim partials do not need to guard against the
+// rails `image_path` method being defined as karma does not have access to
+// this method.
+//
+// Usage:
+//
+//    // Returns the url defined for `DATA.imageUrls.logo` or throws if undefined
+//    <img image-src='logo'>
+//
+angular.module("gizmos.directives").directive("imageSrc", ["Config", function (Config) {
   return {
-    templateUrl: "topic-ring.html",
-    scope: {
-      topic: "=" },
-
-    link: {
-      pre: function pre($scope) {
-        $scope.color = null;
-        $scope.level = null;
-        $scope.percent = null;
-
-        $scope.chartOptions = {
-          barColor: "#408bdc",
-          trackColor: "#e6e6e6",
-          scaleColor: "#dfe0e0",
-          scaleLength: 0,
-          lineCap: "",
-          lineWidth: 3,
-          size: 35,
-          rotate: 0,
-          animate: {
-            duration: 1500,
-            enabled: true
-          }
-        };
-
-        $scope.$watch("topic", _.skipNulls(function (topic) {
-          $scope.color = topic.color;
-          if (topic.quizExperienceForUser) {
-            var Experience = $injector.get("Experience");
-            $scope.percent = Experience.levelCompletion(topic.quizExperienceForUser) * 100;
-            $scope.level = Experience.levelNumber(topic.quizExperienceForUser);
-          } else {
-            $scope.percent = 100;
-            $scope.level = "";
-          }
-        }));
-      }
-
+    restrict: "A",
+    link: function link($scope, element, attributes) {
+      attributes.$observe("imageSrc", function (name) {
+        attributes.$set("src", Config.imageUrls.get(name));
+      });
     }
-
   };
-}]);
-angular.module("gizmos.directives").run(["$templateCache", function ($templateCache) {
-  $templateCache.put("topic-ring.html", "<div ng-class=\"color\" easypiechart=\"\" percent=\"percent\" options=\"chartOptions\" class=\"topic-ring\"><div ng-bind=\"level\" class=\"topic-ring-level\"></div></div>");
 }]);
 // Directive textFit attaches textFit behavior to an element. 
 angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
@@ -688,7 +639,9 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
       var initialize = function () {
         var deregisterFn;
 
-        if (textFitGroup) {
+        console.info(textFitGroup);
+
+        if (textFitGroup && textFitGroup.active) {
           // Register with our parent text fit group
           deregisterFn = textFitGroup.add($element);
         }
@@ -754,9 +707,13 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
 angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",
-
-    controller: function controller() {
+    scope: {
+      textFitGroup: "="
+    },
+    controller: ["$scope", function controller($scope) {
       var _this = this;
+
+      this.active = $scope.textFitGroup || true;
 
       // The child textFit elements that have registered with us through a
       // textFit directive.
@@ -787,6 +744,8 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
             });
             _this.recentRelayoutFontSizes = [];
           });
+        } else {
+          _this.resizeElements();
         }
       };
 
@@ -805,7 +764,7 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
           return el.css("font-size", smallestFontSize);
         });
       };
-    } };
+    }] };
 }]);
 // Value textFit is the core text resizing function to scale up the font-size
 // of the given element until it no longer fits inside its container.
@@ -884,3 +843,52 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   return mid;
 });
+// Directive topic ring creates created a simple donut shape using the provided
+// `color` and `percent` of topic level completed
+angular.module("gizmos.directives").directive("topicRing", ["$injector", function ($injector) {
+  return {
+    templateUrl: "topic-ring.html",
+    scope: {
+      topic: "=" },
+
+    link: {
+      pre: function pre($scope) {
+        $scope.color = null;
+        $scope.level = null;
+        $scope.percent = null;
+
+        $scope.chartOptions = {
+          barColor: "#408bdc",
+          trackColor: "#e6e6e6",
+          scaleColor: "#dfe0e0",
+          scaleLength: 0,
+          lineCap: "",
+          lineWidth: 3,
+          size: 35,
+          rotate: 0,
+          animate: {
+            duration: 1500,
+            enabled: true
+          }
+        };
+
+        $scope.$watch("topic", _.skipNulls(function (topic) {
+          $scope.color = topic.color;
+          if (topic.quizExperienceForUser) {
+            var Experience = $injector.get("Experience");
+            $scope.percent = Experience.levelCompletion(topic.quizExperienceForUser) * 100;
+            $scope.level = Experience.levelNumber(topic.quizExperienceForUser);
+          } else {
+            $scope.percent = 100;
+            $scope.level = "";
+          }
+        }));
+      }
+
+    }
+
+  };
+}]);
+angular.module("gizmos.directives").run(["$templateCache", function ($templateCache) {
+  $templateCache.put("topic-ring.html", "<div ng-class=\"color\" easypiechart=\"\" percent=\"percent\" options=\"chartOptions\" class=\"topic-ring\"><div ng-bind=\"level\" class=\"topic-ring-level\"></div></div>");
+}]);

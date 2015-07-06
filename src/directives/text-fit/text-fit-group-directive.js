@@ -9,8 +9,14 @@
 angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $timeout, textFit ) {
   return {
     restrict: 'A',
-
-    controller: function() {
+    scope: {
+      textFitGroup:'='
+    },
+    controller: function($scope) {
+      
+      
+      this.active = $scope.textFitGroup || true
+           
       // The child textFit elements that have registered with us through a
       // textFit directive.
       this.elements = []
@@ -38,6 +44,8 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
             this.elements.forEach( ( el ) => el.css( 'font-size', minFontSize ) )
             this.recentRelayoutFontSizes = []
           } )
+        } else {
+          this.resizeElements()
         }
       }
 

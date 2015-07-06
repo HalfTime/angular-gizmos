@@ -12,7 +12,9 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
       var initialize = function () {
         var deregisterFn;
 
-        if (textFitGroup) {
+        console.info(textFitGroup);
+
+        if (textFitGroup && textFitGroup.active) {
           // Register with our parent text fit group
           deregisterFn = textFitGroup.add($element);
         }
@@ -78,9 +80,13 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
 angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
   return {
     restrict: "A",
-
-    controller: function controller() {
+    scope: {
+      textFitGroup: "="
+    },
+    controller: ["$scope", function controller($scope) {
       var _this = this;
+
+      this.active = $scope.textFitGroup || true;
 
       // The child textFit elements that have registered with us through a
       // textFit directive.
@@ -111,6 +117,8 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
             });
             _this.recentRelayoutFontSizes = [];
           });
+        } else {
+          _this.resizeElements();
         }
       };
 
@@ -129,7 +137,7 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
           return el.css("font-size", smallestFontSize);
         });
       };
-    } };
+    }] };
 }]);
 // Value textFit is the core text resizing function to scale up the font-size
 // of the given element until it no longer fits inside its container.

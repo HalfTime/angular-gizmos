@@ -12,7 +12,9 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
       let initialize = () => {
         var deregisterFn
 
-        if( textFitGroup ) {
+        console.info(textFitGroup)
+
+        if( textFitGroup && textFitGroup.active) {
           // Register with our parent text fit group
           deregisterFn = textFitGroup.add( $element )
         }
