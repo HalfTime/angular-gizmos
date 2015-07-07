@@ -38,9 +38,10 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
       var doTextFit = () => {
 
         // Check if item is visible. 
-        let isVisible = !($element[0].offsetHeight === 0)
+        let isVisible = true // !($element[0].offsetHeight === 0)
 
         if( isVisible ) {
+          console.info('Running Text Git', $element.text())
           fontSize = textFit( $element, $scope.textFitOptions )
         }
 

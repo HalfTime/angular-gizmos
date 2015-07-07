@@ -665,9 +665,10 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
       var doTextFit = function () {
 
         // Check if item is visible.
-        var isVisible = !($element[0].offsetHeight === 0);
+        var isVisible = true; // !($element[0].offsetHeight === 0)
 
         if (isVisible) {
+          console.info("Running Text Git", $element.text());
           fontSize = textFit($element, $scope.textFitOptions);
         }
 
@@ -724,6 +725,13 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
             _this.recentRelayoutFontSizes = [];
           });
         }
+      };
+
+      this.doTextFit = function (el) {
+
+        _this.elements.map(function (el) {
+          return textFit(el);
+        });
       }
 
       // Calls textFit on each element, then finds the smallest font size
@@ -758,7 +766,13 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
   var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox, accuracy;
 
-  element = angular.element(element);
+  // element = angular.element( element )
+
+  // Check if element is hidden
+  if (element[0].offsetHeight === 0) {
+    console.log("[textFit] Element is hidden", element.text());
+    return null;
+  }
 
   // ToDo: get options from text-fit-group
   options = options || {};
@@ -767,7 +781,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
   // in padding and such. Slower probably not an issue since the container is
-  // only computed once.
+  // only computed once per font resize.
   containerWidth = parseInt(window.getComputedStyle(element.parent()[0]).width, 10);
   containerHeight = parseInt(window.getComputedStyle(element.parent()[0]).height, 10);
 

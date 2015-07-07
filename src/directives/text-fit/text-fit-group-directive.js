@@ -41,6 +41,12 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
         } 
       }
 
+      this.doTextFit = ( el ) => {
+        
+        this.elements.map( ( el ) => textFit( el ) )
+        
+      }
+
       // Calls textFit on each element, then finds the smallest font size
       // amongst all elements and sizes them all to that size.
       // this.resizeElements = function() {
