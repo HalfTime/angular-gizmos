@@ -4,7 +4,7 @@
 
 **Requirements**:
   - Angular
-  - Lodash
+  - Lodash - ToDo: remove lodash dependency
   - NO jQuery!!!!
 
 ### Usage
