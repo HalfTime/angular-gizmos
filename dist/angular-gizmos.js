@@ -736,7 +736,9 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
           return parseInt(el.css("font-size"), 10);
         });
         smallestFontSize = _.min(fontSizes);
-        console.log("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
+        if ($scope.textFitOptions.debug) {
+          console.log("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
+        }
 
         this.elements.forEach(function (el) {
           return el.css("font-size", smallestFontSize);
@@ -769,18 +771,16 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
   var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap;
 
-  // element = angular.element( element )
+  // ToDo: get options from text-fit-group
+  options = options || {};
+
+  if (options.debug) console.log("[textFit] Running on: ", element.text());
 
   // Check if element is hidden
   if (element[0].offsetHeight === 0) {
-    console.log("[textFit] hidden element: ", element.text());
+    if (options.debug) console.log("[textFit] hidden element: ", element.text());
     return null;
   }
-
-  console.log("[textFit] Running on: ", element.text());
-
-  // ToDo: get options from text-fit-group
-  options = options || {};
 
   // Set accuracy for faster guessing
   accuracy = options.accuracy || 0;
@@ -824,13 +824,6 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
     var isTooBig = height > containerHeight || width > containerWidth;
     if (options.debug) {
       console.log("[text-fit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
-    }
-
-    if (!width || !height) {
-      if (shouldWarn) {
-        console.warn("[text-fit] Cannot fit elements text because the element is %sx%s.", width, height, element[0]);
-      }
-      return;
     }
 
     if (isTooBig) {

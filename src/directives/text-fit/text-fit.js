@@ -16,19 +16,16 @@
 angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
   var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap
   
-  // element = angular.element( element )
-  
-  
-  // Check if element is hidden
-  if ( element[0].offsetHeight === 0 ){
-    console.log('[textFit] hidden element: ', element.text())
-    return null
-  }
-  
-  console.log('[textFit] Running on: ', element.text())
-  
   // ToDo: get options from text-fit-group
   options = options || {}
+
+  if ( options.debug ) console.log('[textFit] Running on: ', element.text())
+
+  // Check if element is hidden
+  if ( element[0].offsetHeight === 0 ){
+    if ( options.debug ) console.log('[textFit] hidden element: ', element.text())
+    return null
+  }
   
   // Set accuracy for faster guessing
   accuracy = options.accuracy || 0
@@ -73,13 +70,6 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
     var isTooBig = ( height > containerHeight || width > containerWidth )
     if( options.debug ) {
       console.log( '[text-fit] %sx%s in %sx%s. %s < (%s) < %s - %s', width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? 'too big' : 'too small' )
-    }
-
-    if( !width || !height ) {
-      if( shouldWarn ) {
-        console.warn( '[text-fit] Cannot fit elements text because the element is %sx%s.', width, height, element[0])
-      }
-      return
     }
 
     if( isTooBig ) {
