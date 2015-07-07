@@ -37,9 +37,19 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   // in padding and such. Slower probably not an issue since the container is 
   // only computed once per font resize.
   containerStyle = window.getComputedStyle(element.parent()[0])
-  console.warn(containerStyle)
-  containerWidth = parseInt(containerStyle.width, 10)
-  containerHeight = parseInt(containerStyle.height, 10)  
+  if(element.text() == 'PaddingTest'){ 
+    // console.warn(containerStyle)
+    // console.warn(containerStyle["box-sizing"])
+    // console.warn(containerStyle['padding'])
+  }
+  
+  if( containerStyle["box-sizing"] === 'border-box') {
+    containerWidth = parseFloat(containerStyle.width) - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight) 
+    containerHeight = parseFloat(containerStyle.height)  - parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom)
+  } else {
+    containerWidth = parseFloat(containerStyle.width)
+    containerHeight = parseFloat(containerStyle.height)     
+  }
 
   // Min and max font size.
   projectedPercentageOfBox = options.projectedPercentageOfBox || .87 
