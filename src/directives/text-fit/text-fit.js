@@ -14,7 +14,7 @@
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
-  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap
   
   // element = angular.element( element )
   
@@ -33,19 +33,23 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   // Set accuracy for faster guessing
   accuracy = options.accuracy || 0
   
+  // dis-allow word wrap
+  allowWordWrap = (options.wordWrap !== undefined && options.wordWrap)
+  if(!allowWordWrap) {
+    element.css('white-space', 'nowrap')
+  }
+  
+  // widthStyleUsed = options.wordWrap !== undefined && options.wordWrap === false ? 'offsetHeight' : 'scrollWidth' 
+  console.warn(options.wordWrap,allowWordWrap)
+  
+  
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
   // in padding and such. Slower probably not an issue since the container is 
   // only computed once per font resize.
   containerStyle = window.getComputedStyle(element.parent()[0])
-  if(element.text() == 'PaddingTest'){ 
-    // console.warn(containerStyle)
-    // console.warn(containerStyle["box-sizing"])
-    // console.warn(containerStyle['padding'])
-  }
-  
   if( containerStyle["box-sizing"] === 'border-box') {
-    containerWidth = parseFloat(containerStyle.width) - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight) 
-    containerHeight = parseFloat(containerStyle.height)  - parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom)
+    containerWidth = parseInt(containerStyle.width, 10) - parseInt(containerStyle.paddingLeft, 10) - parseInt(containerStyle.paddingRight, 10) 
+    containerHeight = parseInt(containerStyle.height, 10)  - parseInt(containerStyle.paddingTop, 10) - parseInt(containerStyle.paddingBottom, 10)
   } else {
     containerWidth = parseFloat(containerStyle.width)
     containerHeight = parseFloat(containerStyle.height)     
@@ -54,13 +58,14 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   // Min and max font size.
   projectedPercentageOfBox = options.projectedPercentageOfBox || .87 
   min = options.min || 6
-  max = Math.min(containerHeight / element.text().split(' ').length, options.max) || 120;
+  max = Math.min(containerHeight / (allowWordWrap ? element.text().split(' ').length : 1), options.max) || 120;
   
   // Its assumed that initial mid should be as big as possible since most 
   // answers will fit into regular sizes words or phrases. Size is determines by 
   // container height devided by how many spaces used. 
   mid = Math.floor(Math.min(containerHeight / element.text().split(' ').length, options.max || 20) * projectedPercentageOfBox * 10) / 10
   
+  console.log('initial',min,max,mid)
   
   // Do a binary search for the best font size
   while ( (min + accuracy) <= max ) {

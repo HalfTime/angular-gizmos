@@ -61,13 +61,13 @@
 		  <hr/>
 		  <h1>With internal padding</h1>
 		    <div ng-style="{height: height+'px', width: width+'px', padding: '5%'}" class="my-box">
-		      <div text-fit="'PaddingTest'" style="padding: 5%" text-fit-options="{ max:190, debug: true }" class="my-text"></div>
+		      <div text-fit="'PaddingTest'" style="padding: 5%" text-fit-options="{ max:190, debug: false }" class="my-text"></div>
 		    </div>
 		  <hr/>
 		  <h1>Using Text Group</h1>
-		  <div text-fit-group="{ debug: false, max: 140 }" class="group">
+		  <div text-fit-group="{ wordWrap: false, max: 140 }" class="group">
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-		      <div text-fit="myText1" text-fit-options="{ max:190, debug: debugMyText1 }" class="my-text"></div>
+		      <div text-fit="myText1" text-fit-options="{ max:190, debug: true }" class="my-text"></div>
 		    </div>
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
 		      <div text-fit="myText2" text-fit-options="{ max:190 }" class="my-text"></div>

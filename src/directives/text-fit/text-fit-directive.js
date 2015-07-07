@@ -37,8 +37,6 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
         // otherwise just do this one
         
         doTextFit()
-          
-        
         
       }
 
