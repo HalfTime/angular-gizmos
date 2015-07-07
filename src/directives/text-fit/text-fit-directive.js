@@ -8,7 +8,7 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
     },
     require: '^?textFitGroup',
 
-    link: function( $scope, $element, $attributes, textFitGroup ) {      
+    link: function( $scope, $element, $attributes, textFitGroup ) {
       let initialize = () => {
         var deregisterFn
 

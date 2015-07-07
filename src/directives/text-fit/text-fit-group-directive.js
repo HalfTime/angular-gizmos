@@ -47,7 +47,7 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
 
         fontSizes = this.elements.map( ( el ) => parseInt(el.css('font-size'), 10) )
         smallestFontSize = _.min( fontSizes )
-        if ( $scope.textFitOptions.debug ) {
+        if ( $scope.textFitOptions && $scope.textFitOptions.debug ) {
           console.log( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
         }
 
