@@ -54,7 +54,7 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
       
       this.doGroupTextFit = ( el, childOptions ) => {
         
-        let opts = angular.extend({}, childOptions, $scope.textFitOptions)
+        let opts = angular.extend({}, $scope.textFitOptions, childOptions)
         
         return textFit( el, opts)
         

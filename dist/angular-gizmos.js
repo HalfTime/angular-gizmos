@@ -745,7 +745,7 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
 
       this.doGroupTextFit = function (el, childOptions) {
 
-        var opts = angular.extend({}, childOptions, $scope.textFitOptions);
+        var opts = angular.extend({}, $scope.textFitOptions, childOptions);
 
         return textFit(el, opts);
       };
