@@ -32,22 +32,31 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
         }
 
         $element.text( text )
+        
+        // If part of a group then resize all elements in group
+        // otherwise just do this one
+        
         doTextFit()
+          
+        
+        
       }
 
       var doTextFit = () => {
 
-        // Check if item is visible. 
-        let isVisible = true // !($element[0].offsetHeight === 0)
-
-        if( isVisible ) {
-          console.info('Running Text Git', $element.text())
-          fontSize = textFit( $element, $scope.textFitOptions )
-        }
+        
 
         if( textFitGroup ) {
+          
+          fontSize = textFitGroup.doGroupTextFit( $element, $scope.textFitOptions )
           textFitGroup.notifyOfRelayout( fontSize )
+          
+        } else {
+          
+          fontSize = textFit( $element, $scope.textFitOptions )
+          
         }
+
       }
 
       // Timeout so that view initially renders mostly so we know if it is hidden.

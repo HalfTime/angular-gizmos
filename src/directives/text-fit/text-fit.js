@@ -21,13 +21,16 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   
   // Check if element is hidden
   if ( element[0].offsetHeight === 0 ){
-    console.log('[textFit] Element is hidden', element.text())
+    console.log('[textFit] hidden element: ', element.text())
     return null
   }
+  
+  console.log('[textFit] Running on: ', element.text())
   
   // ToDo: get options from text-fit-group
   options = options || {}
   
+  // Set accuracy for faster guessing
   accuracy = options.accuracy || .5
   
   // This is slow but WAY more reliable than el.scrollWidth. This method factors

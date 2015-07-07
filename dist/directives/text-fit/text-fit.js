@@ -32,21 +32,22 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         }
 
         $element.text(text);
+
+        // If part of a group then resize all elements in group
+        // otherwise just do this one
+
         doTextFit();
       };
 
       var doTextFit = function () {
 
-        // Check if item is visible.
-        var isVisible = true; // !($element[0].offsetHeight === 0)
-
-        if (isVisible) {
-          console.info("Running Text Git", $element.text());
-          fontSize = textFit($element, $scope.textFitOptions);
-        }
-
         if (textFitGroup) {
+
+          fontSize = textFitGroup.doGroupTextFit($element, $scope.textFitOptions);
           textFitGroup.notifyOfRelayout(fontSize);
+        } else {
+
+          fontSize = textFit($element, $scope.textFitOptions);
         }
       };
 
@@ -65,6 +66,7 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
 angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$parse", "textFit", function ($timeout, $parse, textFit) {
   return {
     restrict: "A",
+    scope: { textFitOptions: "=textFitGroup" },
     controller: ["$scope", function controller($scope) {
       var _this = this;
 
@@ -105,20 +107,30 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
         _this.elements.map(function (el) {
           return textFit(el);
         });
-      }
+      };
 
       // Calls textFit on each element, then finds the smallest font size
       // amongst all elements and sizes them all to that size.
-      // this.resizeElements = function() {
-      //   var fontSizes, smallestFontSize
+      this.resizeElements = function () {
+        var fontSizes, smallestFontSize;
 
-      //   fontSizes = this.elements.map( ( el ) => textFit( el ) )
-      //   smallestFontSize = _.min( fontSizes )
-      //   console.log( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
+        fontSizes = this.elements.map(function (el) {
+          return textFit(el);
+        });
+        smallestFontSize = _.min(fontSizes);
+        console.log("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
 
-      //   this.elements.forEach( ( el ) => el.css( 'font-size', smallestFontSize ) )
-      // }
-      ;
+        this.elements.forEach(function (el) {
+          return el.css("font-size", smallestFontSize);
+        });
+      };
+
+      this.doGroupTextFit = function (el, childOptions) {
+
+        var opts = angular.extend({}, childOptions, $scope.textFitOptions);
+
+        return textFit(el, opts);
+      };
     }] };
 }]);
 // Value textFit is the core text resizing function to scale up the font-size
@@ -143,13 +155,16 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   // Check if element is hidden
   if (element[0].offsetHeight === 0) {
-    console.log("[textFit] Element is hidden", element.text());
+    console.log("[textFit] hidden element: ", element.text());
     return null;
   }
+
+  console.log("[textFit] Running on: ", element.text());
 
   // ToDo: get options from text-fit-group
   options = options || {};
 
+  // Set accuracy for faster guessing
   accuracy = options.accuracy || 0.5;
 
   // This is slow but WAY more reliable than el.scrollWidth. This method factors

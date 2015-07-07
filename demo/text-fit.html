@@ -59,7 +59,7 @@
 		  Text In Box 1: <input ng-model="myText1"/> Console Output: <input type="checkbox" ng-model="debugMyText1">
 		  <hr/>
 		  <h1>Using Text Group</h1>
-		  <div text-fit-group="{debug: true}" class="group">
+		  <div text-fit-group="{ debug: true, max: 40 }" class="group">
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
 		      <div text-fit="myText1" text-fit-options="{ max:190, debug: debugMyText1 }" class="my-text"></div>
 		    </div>
@@ -77,13 +77,13 @@
 		<hr>
 		<h1>Not Using Text Group</h1>
 	    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-	      <div ng-hide="false" text-fit="myText4" text-fit-options="{ max:190, debug: false }" class="my-text"></div>
+	      <div ng-hide="false" text-fit="'Stuff'" text-fit-options="{ max:190, debug: false }" class="my-text"></div>
 	    </div>
 		<hr>
 		<h1>Not Using Text Group has parent ancestor hidden<br><small>Has debug = true, so you should see nothing in console signifing the directive is not running.</small></h1>
 	    <div ng-hide="true">
 			<div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-		      <div ng-hide="false" text-fit="myText4" text-fit-options="{ max:190, debug: true }" class="my-text"></div>
+		      <div ng-hide="false" text-fit="'Hidden Stuff'" text-fit-options="{ max:190, debug: true }" class="my-text"></div>
 		    </div>
 	    </div>		
 		
