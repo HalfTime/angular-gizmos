@@ -57,7 +57,7 @@ All the above phrases will be matched in text size.
 You can specify all the options on the children by specifing them in the `text-fit-group` attribute.
 
 ```
-<div id="parentContainer" text-fit-group=" '{max: 30, min: 20, wordWrap: true}' ">
+<div id="parentContainer" text-fit-group=" {max: 30, min: 20, wordWrap: true} ">
     ... 
 </div>
 ```

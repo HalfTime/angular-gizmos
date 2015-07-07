@@ -159,7 +159,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   accuracy = options.accuracy || 0;
 
   // dis-allow word wrap
-  allowWordWrap = options.wordWrap !== undefined && options.wordWrap;
+  allowWordWrap = !(options.wordWrap === false);
   if (!allowWordWrap) {
     element.css("white-space", "nowrap");
   }

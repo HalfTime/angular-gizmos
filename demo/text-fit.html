@@ -10,10 +10,10 @@
 			var myApp = angular.module('myApp', ['gizmos.directives'])
 			
 			myApp.controller('myController', function($scope, $timeout){
-			  $scope.myText1="Hello BigFatLongText withAThirdLine"
-			  $scope.myText2="Hello Josephus"
-			  $scope.myText3="Hello"
-			  $scope.myText4="JustABigDumbWord"
+			  $scope.myText1="The atria finish contracting"
+			  $scope.myText2="The right ventricle enlarges sufficiently"
+			  $scope.myText3="The myocardium relaxes"
+			  $scope.myText4="The individual is at rest"
 			  
 			  $scope.height = 100
 			  $scope.width = 200
@@ -65,10 +65,12 @@
 		    </div>
 		  <hr/>
 		  <h1>Using Text Group</h1>
-		  <div text-fit-group="{ wordWrap: true, max: 140, debug: consoleOut }" class="group">
-		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
-		      <div text-fit="myText1" text-fit-options="{ max:190 }" class="my-text"></div>
-		    </div>
+		  <div text-fit-group="{ max: 140, debug: consoleOut }" class="group">
+		    <div ng-repeat="index in [1,2]">
+				<div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+			      <div text-fit="myText1" text-fit-options="{ max:190 }" class="my-text"></div>
+			    </div>
+			</div>
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
 		      <div text-fit="myText2" text-fit-options="{ max:190 }" class="my-text"></div>
 		    </div>
