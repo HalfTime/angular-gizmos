@@ -58,8 +58,13 @@
 		  Padding: <input type="number" ng-model="padding" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>
 		  Text In Box 1: <input ng-model="myText1"/> Console Output: <input type="checkbox" ng-model="debugMyText1">
 		  <hr/>
+		  <h1>With internal padding</h1>
+		    <div ng-style="{height: height+'px', width: width+'px', padding: '5%'}" class="my-box">
+		      <div text-fit="myText1" style="padding: 5%" text-fit-options="{ max:190, debug: true }" class="my-text"></div>
+		    </div>
+		  <hr/>
 		  <h1>Using Text Group</h1>
-		  <div text-fit-group="{ debug: true, max: 140 }" class="group">
+		  <div text-fit-group="{ debug: false, max: 140 }" class="group">
 		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
 		      <div text-fit="myText1" text-fit-options="{ max:190, debug: debugMyText1 }" class="my-text"></div>
 		    </div>

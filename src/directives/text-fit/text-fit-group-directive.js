@@ -35,7 +35,7 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
           this.relayoutNotified = true
           $timeout( () => {
             this.setToMin()
-            this.recentRelayoutFontSizes = []
+            this.relayoutNotified = false
           } )
         } 
       }

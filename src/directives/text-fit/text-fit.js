@@ -14,7 +14,7 @@
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
-  var min, max, mid, lastMid, containerWidth, containerHeight, projectedPercentageOfBox, accuracy
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy
   
   // element = angular.element( element )
   
@@ -31,13 +31,15 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   options = options || {}
   
   // Set accuracy for faster guessing
-  accuracy = options.accuracy || .5
+  accuracy = options.accuracy || 0
   
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
   // in padding and such. Slower probably not an issue since the container is 
   // only computed once per font resize.
-  containerWidth = parseInt(window.getComputedStyle(element.parent()[0]).width, 10)
-  containerHeight = parseInt(window.getComputedStyle(element.parent()[0]).height, 10)
+  containerStyle = window.getComputedStyle(element.parent()[0])
+  console.warn(containerStyle)
+  containerWidth = parseInt(containerStyle.width, 10)
+  containerHeight = parseInt(containerStyle.height, 10)  
 
   // Min and max font size.
   projectedPercentageOfBox = options.projectedPercentageOfBox || .87 
