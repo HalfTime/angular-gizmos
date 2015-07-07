@@ -54,7 +54,7 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   // Min and max font size.
   projectedPercentageOfBox = options.projectedPercentageOfBox || .87 
   min = options.min || 6
-  max = Math.min(containerHeight / element.text().split(' ').length, options.max) || 20;
+  max = Math.min(containerHeight / element.text().split(' ').length, options.max) || 120;
   
   // Its assumed that initial mid should be as big as possible since most 
   // answers will fit into regular sizes words or phrases. Size is determines by 
