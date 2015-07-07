@@ -668,6 +668,8 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
 
       var doTextFit = function () {
 
+        var fontSize = undefined;
+
         if (textFitGroup) {
 
           fontSize = textFitGroup.doGroupTextFit($element, $scope.textFitOptions);
@@ -702,7 +704,7 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
       this.elements = [];
 
       // List of font sizes for relayouts that have happened in the last digest cycle.
-      this.recentRelayoutFontSizes = [];
+      this.relayoutNotified = false;
 
       // Adds a textFit element to this group.
       // Returns a deregister function the caller should call when destroyed.
@@ -714,35 +716,24 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
       // When a child textFit element does a relayout, it notifies us.  We
       // queue a resize and sync to happen, which assumes all children are
       // updating their text in a single digest cycle.
-      this.notifyOfRelayout = function (fontSize) {
-        _this.recentRelayoutFontSizes.push(fontSize);
+      this.notifyOfRelayout = function () {
 
-        if (_this.recentRelayoutFontSizes.length === 1) {
+        if (!_this.relayoutNotified) {
+          _this.relayoutNotified = true;
           $timeout(function () {
-            var minFontSize = _.min(_this.recentRelayoutFontSizes);
-            console.log("[textFitGroup] notifyOfRelayout()", _this.recentRelayoutFontSizes, minFontSize);
-            _this.elements.forEach(function (el) {
-              return el.css("font-size", minFontSize);
-            });
+            _this.setToMin();
             _this.recentRelayoutFontSizes = [];
           });
         }
       };
 
-      this.doTextFit = function (el) {
-
-        _this.elements.map(function (el) {
-          return textFit(el);
-        });
-      };
-
       // Calls textFit on each element, then finds the smallest font size
       // amongst all elements and sizes them all to that size.
-      this.resizeElements = function () {
+      this.setToMin = function () {
         var fontSizes, smallestFontSize;
 
         fontSizes = this.elements.map(function (el) {
-          return textFit(el);
+          return parseInt(el.css("font-size"), 10);
         });
         smallestFontSize = _.min(fontSizes);
         console.log("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);

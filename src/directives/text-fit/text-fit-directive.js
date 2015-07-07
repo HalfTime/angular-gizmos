@@ -27,7 +27,7 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
       var onTextChange = () => {
         let { text } = $scope
 
-        if( !text) {
+        if( !text ) {
           return
         }
 
@@ -44,6 +44,7 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
 
       var doTextFit = () => {
 
+        let fontSize
         
 
         if( textFitGroup ) {

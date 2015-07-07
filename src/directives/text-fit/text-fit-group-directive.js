@@ -17,7 +17,7 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
       this.elements = []
 
       // List of font sizes for relayouts that have happened in the last digest cycle.
-      this.recentRelayoutFontSizes = []
+      this.relayoutNotified = false
 
       // Adds a textFit element to this group.
       // Returns a deregister function the caller should call when destroyed.
@@ -29,31 +29,23 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
       // When a child textFit element does a relayout, it notifies us.  We
       // queue a resize and sync to happen, which assumes all children are
       // updating their text in a single digest cycle.
-      this.notifyOfRelayout = ( fontSize ) => {
-        this.recentRelayoutFontSizes.push( fontSize )
+      this.notifyOfRelayout = (  ) => {
 
-        if( this.recentRelayoutFontSizes.length === 1 ) {
+        if( !this.relayoutNotified ) {
+          this.relayoutNotified = true
           $timeout( () => {
-            var minFontSize = _.min( this.recentRelayoutFontSizes )
-            console.log( '[textFitGroup] notifyOfRelayout()', this.recentRelayoutFontSizes, minFontSize )
-            this.elements.forEach( ( el ) => el.css( 'font-size', minFontSize ) )
+            this.setToMin()
             this.recentRelayoutFontSizes = []
           } )
         } 
       }
 
-      this.doTextFit = ( el ) => {
-        
-        this.elements.map( ( el ) => textFit( el ) )
-        
-      }
-
       // Calls textFit on each element, then finds the smallest font size
       // amongst all elements and sizes them all to that size.
-      this.resizeElements = function() {
+      this.setToMin = function() {
         var fontSizes, smallestFontSize
 
-        fontSizes = this.elements.map( ( el ) => textFit( el ) )
+        fontSizes = this.elements.map( ( el ) => parseInt(el.css('font-size'), 10) )
         smallestFontSize = _.min( fontSizes )
         console.log( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
 
