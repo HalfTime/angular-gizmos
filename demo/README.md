@@ -26,8 +26,14 @@ Options can be specified in the `text-fit-options` attribute
         text-fit-options=" { max: 100 // default, 
                             min: 6 // default, 
                             debug: false // default, 
-                            wordWrap: true // default } "/>
+                            wordWrap: true // default,
+                            accuracy: 0 // default,
+                            projectedPercentageOfBox: .87 // default } "/>
 ```
+* accuracy = the directive needs to resize the font and then test that size to see if it is too big or too small. This will dump out of the guessing phase if its last two guesses were within a certain threshold specified. For instace, if you specify .5 then the system will stop guess as soon as its last two guesses are within 1/2 pixel of each other.
+
+* projectedPercentageOfBox = the directive needs a starting point for the size of the text. It assumes a good starting point is the (height of container) * projectedPercentageOfBox. Use this with the above setting to get faster guesses and speed up the performance of this directive. 
+
 
 
 # text-fit-group
