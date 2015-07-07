@@ -164,9 +164,6 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
     element.css("white-space", "nowrap");
   }
 
-  // widthStyleUsed = options.wordWrap !== undefined && options.wordWrap === false ? 'offsetHeight' : 'scrollWidth'
-  console.warn(options.wordWrap, allowWordWrap);
-
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
   // in padding and such. Slower probably not an issue since the container is
   // only computed once per font resize.
@@ -188,8 +185,6 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   // answers will fit into regular sizes words or phrases. Size is determines by
   // container height devided by how many spaces used.
   mid = Math.floor(Math.min(containerHeight / element.text().split(" ").length, options.max || 20) * projectedPercentageOfBox * 10) / 10;
-
-  console.log("initial", min, max, mid);
 
   // Do a binary search for the best font size
   while (min + accuracy <= max) {
