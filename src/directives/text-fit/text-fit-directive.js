@@ -33,9 +33,6 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
 
         $element.text( text )
         
-        // If part of a group then resize all elements in group
-        // otherwise just do this one
-        
         doTextFit()
         
       }
@@ -47,6 +44,8 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
 
         if( textFitGroup ) {
           
+          // If part of a group then run resize through parent          
+
           fontSize = textFitGroup.doGroupTextFit( $element, $scope.textFitOptions )
           textFitGroup.notifyOfRelayout( fontSize )
           

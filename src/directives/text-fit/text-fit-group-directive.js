@@ -40,15 +40,15 @@ angular.module( 'gizmos.directives' ).directive( 'textFitGroup', function( $time
         } 
       }
 
-      // Calls textFit on each element, then finds the smallest font size
-      // amongst all elements and sizes them all to that size.
+      // Finds the smallest font size amongst all elements 
+      // and sizes them all to that size.
       this.setToMin = function() {
         var fontSizes, smallestFontSize
 
         fontSizes = this.elements.map( ( el ) => parseInt(el.css('font-size'), 10) )
         smallestFontSize = _.min( fontSizes )
         if ( $scope.textFitOptions && $scope.textFitOptions.debug ) {
-          console.log( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
+          console[ $scope.textFitOptions.debug === true ? 'log' : $scope.textFitOptions.debug ]( '[textFitGroup] resizeElement()', fontSizes, smallestFontSize )
         }
 
         this.elements.forEach( ( el ) => el.css( 'font-size', smallestFontSize ) )

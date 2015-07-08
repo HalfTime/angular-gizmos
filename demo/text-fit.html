@@ -57,7 +57,8 @@
 		  Width: <input type="number" ng-model="width" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
 		  Height: <input type="number" ng-model="height" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
 		  Padding: <input type="number" ng-model="padding" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>
-		  Text In Box 1: <input ng-model="myText1"/> Console Output: <input type="checkbox" ng-model="consoleOut" ng-change="doStuff()" ng-model-options="{debounce: 500}">
+		  Text In Box 1: <input ng-model="myText1"/> 
+		  Console Output: <input type="checkbox" ng-model="consoleOut" ng-change="doStuff()" ng-model-options="{debounce: 500}" ng-true-value="'info'">
 		  <hr/>
 		  <h1>With internal padding</h1>
 		    <div ng-style="{height: height+'px', width: width+'px', padding: '5%'}" class="my-box">

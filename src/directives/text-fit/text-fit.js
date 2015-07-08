@@ -14,16 +14,26 @@
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
-  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap, debug
+  
+  debug = function ( ...args ) {
+
+    if ( options.debug ) {
+      
+      console[ options.debug === true ? 'log' : options.debug ]( ...args )
+      
+    }
+    
+  }  
   
   // ToDo: get options from text-fit-group
   options = options || {}
 
-  if ( options.debug ) console.log('[textFit] Running on: ', element.text())
+  debug('[textFit] Running on: ', element.text())
 
   // Check if element is hidden
   if ( element[0].offsetHeight === 0 ){
-    if ( options.debug ) console.log('[textFit] hidden element: ', element.text())
+    debug('[textFit] hidden element: ', element.text())
     return null
   }
   
@@ -68,9 +78,8 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
     var width = element[0].scrollWidth
     var height = element[0].offsetHeight
     var isTooBig = ( height > containerHeight || width > containerWidth )
-    if( options.debug ) {
-      console.log( '[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s', width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? 'too big' : 'too small' )
-    }
+    
+    debug( '[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s', width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? 'too big' : 'too small' )
 
     if( isTooBig ) {
       max = mid;

@@ -660,9 +660,6 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
 
         $element.text(text);
 
-        // If part of a group then resize all elements in group
-        // otherwise just do this one
-
         doTextFit();
       };
 
@@ -671,6 +668,8 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         var fontSize = undefined;
 
         if (textFitGroup) {
+
+          // If part of a group then run resize through parent         
 
           fontSize = textFitGroup.doGroupTextFit($element, $scope.textFitOptions);
           textFitGroup.notifyOfRelayout(fontSize);
@@ -727,8 +726,8 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
         }
       };
 
-      // Calls textFit on each element, then finds the smallest font size
-      // amongst all elements and sizes them all to that size.
+      // Finds the smallest font size amongst all elements
+      // and sizes them all to that size.
       this.setToMin = function () {
         var fontSizes, smallestFontSize;
 
@@ -737,7 +736,7 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
         });
         smallestFontSize = _.min(fontSizes);
         if ($scope.textFitOptions && $scope.textFitOptions.debug) {
-          console.log("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
+          console[$scope.textFitOptions.debug === true ? "log" : $scope.textFitOptions.debug]("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
         }
 
         this.elements.forEach(function (el) {
@@ -769,16 +768,27 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
-  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap;
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap, debug;
+
+  debug = function () {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (options.debug) {
+
+      console[options.debug === true ? "log" : options.debug].apply(console, args);
+    }
+  };
 
   // ToDo: get options from text-fit-group
   options = options || {};
 
-  if (options.debug) console.log("[textFit] Running on: ", element.text());
+  debug("[textFit] Running on: ", element.text());
 
   // Check if element is hidden
   if (element[0].offsetHeight === 0) {
-    if (options.debug) console.log("[textFit] hidden element: ", element.text());
+    debug("[textFit] hidden element: ", element.text());
     return null;
   }
 
@@ -822,9 +832,8 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
     var width = element[0].scrollWidth;
     var height = element[0].offsetHeight;
     var isTooBig = height > containerHeight || width > containerWidth;
-    if (options.debug) {
-      console.log("[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
-    }
+
+    debug("[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
 
     if (isTooBig) {
       max = mid;
