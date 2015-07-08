@@ -823,7 +823,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
     var height = element[0].offsetHeight;
     var isTooBig = height > containerHeight || width > containerWidth;
     if (options.debug) {
-      console.log("[text-fit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
+      console.log("[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
     }
 
     if (isTooBig) {
