@@ -1,7 +1,5 @@
-// Directive textFit attaches textFit behavior to an element.  Currently, all
-// it does is register with an ancester textFitGroup directive which handles
-// resizing it.  Behavior for it to resize itself can be added when needed.
-angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, textFit ) {
+// Directive textFit attaches textFit behavior to an element.  
+angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, textFit, $parse ) {
   return {
     restrict: 'A',
     scope: {
@@ -29,43 +27,38 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
       var onTextChange = () => {
         let { text } = $scope
 
-        if( !text) {
+        if( !text ) {
           return
         }
 
         $element.text( text )
+        
         doTextFit()
+        
       }
-
-      // If an element is not visible it will appear to be 0x0 and not re-size
-      // properly.  This is common if the element or its ancestor is ng-hidden.
-      let retryCount = 0
-      let maxRetryCount = 10
-      let retryInterval = 35
 
       var doTextFit = () => {
+
         let fontSize
-        let isLastRetry = ( retryCount >= maxRetryCount )
-
-        // Much faster check then `:visible`, though not as robust.
-        let isVisible = ( !$element.closest('.ng-hide').length )
-
-        if( isVisible ) {
-          fontSize = textFit( $element, $scope.textFitOptions, isLastRetry )
-        }
-
-        if( !fontSize && !isLastRetry ) {
-          retryCount += 1
-          $timeout( doTextFit, retryInterval, false )
-          return
-        }
+        
 
         if( textFitGroup ) {
+          
+          // If part of a group then run resize through parent          
+
+          fontSize = textFitGroup.doGroupTextFit( $element, $scope.textFitOptions )
           textFitGroup.notifyOfRelayout( fontSize )
+          
+        } else {
+          
+          fontSize = textFit( $element, $scope.textFitOptions )
+          
         }
+
       }
 
-      initialize()
+      // Timeout so that view initially renders mostly so we know if it is hidden.
+      $timeout(initialize)
 
     },
   }

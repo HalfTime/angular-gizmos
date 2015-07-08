@@ -1,0 +1,101 @@
+<html>
+	<head>
+		
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+		<script src="/dist/angular-gizmos.js"></script>
+	
+		<script>
+
+			var myApp = angular.module('myApp', ['gizmos.directives'])
+			
+			myApp.controller('myController', function($scope, $timeout){
+			  $scope.myText1="The atria finish contracting"
+			  $scope.myText2="The right ventricle enlarges sufficiently"
+			  $scope.myText3="The myocardium relaxes"
+			  $scope.myText4="The individual is at rest"
+			  
+			  $scope.height = 100
+			  $scope.width = 200
+			  $scope.padding = 0
+			  
+			  $scope.consoleOut = false;
+			  
+			  $scope.useTextGroup = false
+			  
+			  $scope.doStuff = function(){
+			    $timeout( function() {
+			      $scope.$broadcast('textFit')
+			    })
+			  }
+			})			
+			
+		</script>
+	
+		<style>
+			.my-box {
+			  box-sizing: border-box;
+			  display: flex;
+			  height: 100px;
+			  width: 320px;
+			  border: 1px solid green;
+			  margin: 20px auto;
+			  justify-content: center;
+			  align-items: center;
+			}
+			
+			.my-text {
+			  text-align: center;
+			}
+		</style>
+	
+	
+	</head>
+	<body ng-app="myApp" ng-controller="myController">
+
+		<div>
+		  Width: <input type="number" ng-model="width" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
+		  Height: <input type="number" ng-model="height" ng-change="doStuff()" ng-model-options="{debounce: 500}"/>
+		  Padding: <input type="number" ng-model="padding" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>
+		  Text In Box 1: <input ng-model="myText1"/> 
+		  Console Output: <input type="checkbox" ng-model="consoleOut" ng-change="doStuff()" ng-model-options="{debounce: 500}" ng-true-value="'info'">
+		  <hr/>
+		  <h1>With good first guess</h1>
+		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
+		      <div text-fit="'Test'" text-fit-options="{ max:190, debug: consoleOut }" class="my-text"></div>
+		    </div>
+		  <hr/>
+		  <h1>Using Text Group</h1>
+		  <div text-fit-group="{ max: 140, debug: consoleOut }" class="group">
+		    <div ng-repeat="index in [1,2]">
+				<div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+			      <div text-fit="myText1" text-fit-options="{ max:190 }" class="my-text"></div>
+			    </div>
+			</div>
+		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+		      <div text-fit="myText2" text-fit-options="{ max:190 }" class="my-text"></div>
+		    </div>
+		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+		      <div text-fit="myText3" text-fit-options="{ max:190 }" class="my-text"></div>
+		    </div>
+		    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+		      <div ng-hide="false" text-fit="myText4" text-fit-options="{ max:190 }" class="my-text"></div>
+		    </div>
+		  </div>
+		</div>
+		<hr>
+		<h1>Not Using Text Group & Word Wrap Off</h1>
+	    <div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+	      <div ng-hide="false" text-fit="'should not word wrap'" text-fit-options="{ max:190, wordWrap: false }" class="my-text"></div>
+	    </div>
+		<hr>
+		<h1>Not Using Text Group has parent ancestor hidden<br><small>Has debug = true and will show console output stating that its hidden.</small></h1>
+	    <div ng-hide="true">
+			<div ng-style="{height: height+'px', width: width+'px', padding: padding+'px'}" class="my-box">
+		      <div ng-hide="false" text-fit="'Hidden Stuff'" text-fit-options="{ max:190, debug: consoleOut }" class="my-text"></div>
+		    </div>
+	    </div>		
+		
+		
+	</body>
+</html>

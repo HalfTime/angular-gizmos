@@ -14,20 +14,74 @@
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
-  var min, max, mid, lastMid, containerWidth, containerHeight
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap, debug
+  
+  debug = function ( ...args ) {
 
-  element = angular.element( element )
+    if ( options.debug ) {
+      
+      console[ options.debug === true ? 'log' : options.debug ]( ...args )
+      
+    }
+    
+  }  
+  
+  // ToDo: get options from text-fit-group
   options = options || {}
+
+  debug('[textFit] Running on: ', element.text())
+
+  // Check if element is hidden
+  if ( element[0].offsetHeight === 0 ){
+    debug('[textFit] hidden element: ', element.text())
+    return null
+  }
+  
+  // Set accuracy for faster guessing
+  accuracy = options.accuracy || 0
+  
+  // dis-allow word wrap
+  allowWordWrap = !(options.wordWrap === false)
+  if(!allowWordWrap) {
+    element.css('white-space', 'nowrap')
+  }
+  
+  // This is slow but WAY more reliable than el.scrollWidth. This method factors
+  // in padding and such. Slower probably not an issue since the container is 
+  // only computed once per font resize.
+  containerStyle = window.getComputedStyle(element.parent()[0])
+  if( containerStyle["box-sizing"] === 'border-box') {
+    containerWidth = parseInt(containerStyle.width, 10) - parseInt(containerStyle.paddingLeft, 10) - parseInt(containerStyle.paddingRight, 10) 
+    containerHeight = parseInt(containerStyle.height, 10)  - parseInt(containerStyle.paddingTop, 10) - parseInt(containerStyle.paddingBottom, 10)
+  } else {
+    containerWidth = parseFloat(containerStyle.width)
+    containerHeight = parseFloat(containerStyle.height)     
+  }
 
   // Min and max font size.
   min = options.min || 6
-  max = options.max || 20
-
-  containerWidth = element.parent().width()
-  containerHeight = element.parent().height()
-
+  max = Math.min(containerHeight, (options.max || 120) );
+  mid = Math.floor( ( min + max ) / 2 * 10 ) / 10
+  
   // Do a binary search for the best font size
-  while ( min <= max ) {
+  while ( (min + accuracy) <= max ) {
+
+
+    element.css( 'font-size', mid+'px' )
+
+    // Use scrollWidth because it checks for overflow text
+    var width = element[0].scrollWidth
+    var height = element[0].offsetHeight
+    var isTooBig = ( height > containerHeight || width > containerWidth )
+    
+    debug( '[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s', width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? 'too big' : 'too small' )
+
+    if( isTooBig ) {
+      max = mid;
+    } else {
+      min = mid;
+    }
+    
     lastMid = mid
     mid = Math.floor( ( min + max ) / 2 * 10 ) / 10
 
@@ -35,27 +89,7 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
       break
     }
 
-    element.css( 'font-size', mid )
-
-    var width = element[0].offsetWidth
-    var height = element[0].offsetHeight
-    var isTooBig = ( height > containerHeight || width > containerWidth )
-    if( options.debug ) {
-      console.log( '[text-fit] %sx%s in %sx%s. %s < (%s) < %s - %s', width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? 'too big' : 'too small' )
-    }
-
-    if( !width || !height ) {
-      if( shouldWarn ) {
-        console.warn( '[text-fit] Cannot fit elements text because the element is %sx%s.', width, height, element[0])
-      }
-      return
-    }
-
-    if( isTooBig ) {
-      max = mid;
-    } else {
-      min = mid;
-    }
+    
   }
 
   return mid

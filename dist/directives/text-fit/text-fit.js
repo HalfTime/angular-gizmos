@@ -1,7 +1,5 @@
-// Directive textFit attaches textFit behavior to an element.  Currently, all
-// it does is register with an ancester textFitGroup directive which handles
-// resizing it.  Behavior for it to resize itself can be added when needed.
-angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", function ($timeout, textFit) {
+// Directive textFit attaches textFit behavior to an element. 
+angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", "$parse", function ($timeout, textFit, $parse) {
   return {
     restrict: "A",
     scope: {
@@ -34,38 +32,28 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         }
 
         $element.text(text);
+
         doTextFit();
       };
 
-      // If an element is not visible it will appear to be 0x0 and not re-size
-      // properly.  This is common if the element or its ancestor is ng-hidden.
-      var retryCount = 0;
-      var maxRetryCount = 10;
-      var retryInterval = 35;
-
       var doTextFit = function () {
+
         var fontSize = undefined;
-        var isLastRetry = retryCount >= maxRetryCount;
-
-        // Much faster check then `:visible`, though not as robust.
-        var isVisible = !$element.closest(".ng-hide").length;
-
-        if (isVisible) {
-          fontSize = textFit($element, $scope.textFitOptions, isLastRetry);
-        }
-
-        if (!fontSize && !isLastRetry) {
-          retryCount += 1;
-          $timeout(doTextFit, retryInterval, false);
-          return;
-        }
 
         if (textFitGroup) {
+
+          // If part of a group then run resize through parent         
+
+          fontSize = textFitGroup.doGroupTextFit($element, $scope.textFitOptions);
           textFitGroup.notifyOfRelayout(fontSize);
+        } else {
+
+          fontSize = textFit($element, $scope.textFitOptions);
         }
       };
 
-      initialize();
+      // Timeout so that view initially renders mostly so we know if it is hidden.
+      $timeout(initialize);
     } };
 }]);
 // Directive textFitGroup coordinates between multiple child textFit directive
@@ -76,11 +64,11 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
 //
 // The directive knows it is time to call textFit when the `isNeeded` property
 // on the passed in model is set to true.
-angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "textFit", function ($timeout, textFit) {
+angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$parse", "textFit", function ($timeout, $parse, textFit) {
   return {
     restrict: "A",
-
-    controller: function controller() {
+    scope: { textFitOptions: "=textFitGroup" },
+    controller: ["$scope", function controller($scope) {
       var _this = this;
 
       // The child textFit elements that have registered with us through a
@@ -88,7 +76,7 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
       this.elements = [];
 
       // List of font sizes for relayouts that have happened in the last digest cycle.
-      this.recentRelayoutFontSizes = [];
+      this.relayoutNotified = false;
 
       // Adds a textFit element to this group.
       // Returns a deregister function the caller should call when destroyed.
@@ -100,37 +88,42 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
       // When a child textFit element does a relayout, it notifies us.  We
       // queue a resize and sync to happen, which assumes all children are
       // updating their text in a single digest cycle.
-      this.notifyOfRelayout = function (fontSize) {
-        _this.recentRelayoutFontSizes.push(fontSize);
+      this.notifyOfRelayout = function () {
 
-        if (_this.recentRelayoutFontSizes.length === 1) {
+        if (!_this.relayoutNotified) {
+          _this.relayoutNotified = true;
           $timeout(function () {
-            var minFontSize = _.min(_this.recentRelayoutFontSizes);
-            console.log("[textFitGroup] notifyOfRelayout()", _this.recentRelayoutFontSizes, minFontSize);
-            _this.elements.forEach(function (el) {
-              return el.css("font-size", minFontSize);
-            });
-            _this.recentRelayoutFontSizes = [];
+            _this.setToMin();
+            _this.relayoutNotified = false;
           });
         }
       };
 
-      // Calls textFit on each element, then finds the smallest font size
-      // amongst all elements and sizes them all to that size.
-      this.resizeElements = function () {
+      // Finds the smallest font size amongst all elements
+      // and sizes them all to that size.
+      this.setToMin = function () {
         var fontSizes, smallestFontSize;
 
         fontSizes = this.elements.map(function (el) {
-          return textFit(el);
+          return parseInt(el.css("font-size"), 10);
         });
         smallestFontSize = _.min(fontSizes);
-        console.log("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
+        if ($scope.textFitOptions && $scope.textFitOptions.debug) {
+          console[$scope.textFitOptions.debug === true ? "log" : $scope.textFitOptions.debug]("[textFitGroup] resizeElement()", fontSizes, smallestFontSize);
+        }
 
         this.elements.forEach(function (el) {
           return el.css("font-size", smallestFontSize);
         });
       };
-    } };
+
+      this.doGroupTextFit = function (el, childOptions) {
+
+        var opts = angular.extend({}, $scope.textFitOptions, childOptions);
+
+        return textFit(el, opts);
+      };
+    }] };
 }]);
 // Value textFit is the core text resizing function to scale up the font-size
 // of the given element until it no longer fits inside its container.
@@ -148,47 +141,79 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "text
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
-  var min, max, mid, lastMid, containerWidth, containerHeight;
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap, debug;
 
-  element = angular.element(element);
+  debug = function () {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (options.debug) {
+
+      console[options.debug === true ? "log" : options.debug].apply(console, args);
+    }
+  };
+
+  // ToDo: get options from text-fit-group
   options = options || {};
+
+  debug("[textFit] Running on: ", element.text());
+
+  // Check if element is hidden
+  if (element[0].offsetHeight === 0) {
+    debug("[textFit] hidden element: ", element.text());
+    return null;
+  }
+
+  // Set accuracy for faster guessing
+  accuracy = options.accuracy || 0;
+
+  // dis-allow word wrap
+  allowWordWrap = !(options.wordWrap === false);
+  if (!allowWordWrap) {
+    element.css("white-space", "nowrap");
+  }
+
+  // This is slow but WAY more reliable than el.scrollWidth. This method factors
+  // in padding and such. Slower probably not an issue since the container is
+  // only computed once per font resize.
+  containerStyle = window.getComputedStyle(element.parent()[0]);
+  if (containerStyle["box-sizing"] === "border-box") {
+    containerWidth = parseInt(containerStyle.width, 10) - parseInt(containerStyle.paddingLeft, 10) - parseInt(containerStyle.paddingRight, 10);
+    containerHeight = parseInt(containerStyle.height, 10) - parseInt(containerStyle.paddingTop, 10) - parseInt(containerStyle.paddingBottom, 10);
+  } else {
+    containerWidth = parseFloat(containerStyle.width);
+    containerHeight = parseFloat(containerStyle.height);
+  }
 
   // Min and max font size.
   min = options.min || 6;
-  max = options.max || 20;
-
-  containerWidth = element.parent().width();
-  containerHeight = element.parent().height();
+  max = Math.min(containerHeight, options.max || 120);
+  mid = Math.floor((min + max) / 2 * 10) / 10;
 
   // Do a binary search for the best font size
-  while (min <= max) {
-    lastMid = mid;
-    mid = Math.floor((min + max) / 2 * 10) / 10;
+  while (min + accuracy <= max) {
 
-    if (mid === lastMid) {
-      break;
-    }
+    element.css("font-size", mid + "px");
 
-    element.css("font-size", mid);
-
-    var width = element[0].offsetWidth;
+    // Use scrollWidth because it checks for overflow text
+    var width = element[0].scrollWidth;
     var height = element[0].offsetHeight;
     var isTooBig = height > containerHeight || width > containerWidth;
-    if (options.debug) {
-      console.log("[text-fit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
-    }
 
-    if (!width || !height) {
-      if (shouldWarn) {
-        console.warn("[text-fit] Cannot fit elements text because the element is %sx%s.", width, height, element[0]);
-      }
-      return;
-    }
+    debug("[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
 
     if (isTooBig) {
       max = mid;
     } else {
       min = mid;
+    }
+
+    lastMid = mid;
+    mid = Math.floor((min + max) / 2 * 10) / 10;
+
+    if (mid === lastMid) {
+      break;
     }
   }
 
