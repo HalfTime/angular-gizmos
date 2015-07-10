@@ -626,7 +626,7 @@ angular.module("gizmos.directives").directive("imageSrc", ["Config", function (C
   };
 }]);
 // Directive textFit attaches textFit behavior to an element. 
-angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit", "$parse", function ($timeout, textFit, $parse) {
+angular.module("gizmos.directives").directive("textFit", ["$timeout", "$window", "textFit", function ($timeout, $window, textFit) {
   return {
     restrict: "A",
     scope: {
@@ -645,8 +645,20 @@ angular.module("gizmos.directives").directive("textFit", ["$timeout", "textFit",
         }
 
         $scope.$watch("text", onTextChange);
-        $scope.$on("$destroy", deregisterFn || angular.noop);
         $scope.$on("textFit", onTextChange);
+
+        // Add focus event to trigger textfit
+        $window.addEventListener("focus", onTextChange);
+
+        // Deregister on destroy
+        $scope.$on("$destroy", function () {
+
+          if (textFitGroup) {
+            deregisterFn();
+          }
+
+          $window.removeEventListener("focus", onTextChange);
+        });
       };
 
       // When the text changes, update the element's text and rerun textFit.
@@ -768,7 +780,7 @@ angular.module("gizmos.directives").directive("textFitGroup", ["$timeout", "$par
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module("gizmos.directives").value("textFit", function textFit(element, options, shouldWarn) {
-  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap, debug;
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, accuracy, allowWordWrap, debug;
 
   debug = function () {
     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {

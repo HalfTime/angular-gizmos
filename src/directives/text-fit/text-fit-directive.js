@@ -1,5 +1,5 @@
 // Directive textFit attaches textFit behavior to an element.  
-angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, textFit, $parse ) {
+angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout,  $window, textFit ) {
   return {
     restrict: 'A',
     scope: {
@@ -18,8 +18,21 @@ angular.module( 'gizmos.directives' ).directive( 'textFit', function( $timeout, 
         }
 
         $scope.$watch( 'text', onTextChange )
-        $scope.$on( '$destroy', deregisterFn || angular.noop )
         $scope.$on( 'textFit', onTextChange )
+        
+        // Add focus event to trigger textfit
+        $window.addEventListener('focus', onTextChange)
+        
+        // Deregister on destroy
+        $scope.$on( '$destroy', () => {
+          
+            if( textFitGroup ) {
+              deregisterFn()
+            } 
+            
+            $window.removeEventListener('focus', onTextChange)
+          
+          })
       }
 
       // When the text changes, update the element's text and rerun textFit.
