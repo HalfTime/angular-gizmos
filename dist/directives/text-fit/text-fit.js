@@ -179,11 +179,11 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
   // only computed once per font resize.
   containerStyle = window.getComputedStyle(element.parent()[0]);
   if (containerStyle["box-sizing"] === "border-box") {
-    containerWidth = parseInt(containerStyle.width, 10) - parseInt(containerStyle.paddingLeft, 10) - parseInt(containerStyle.paddingRight, 10);
-    containerHeight = parseInt(containerStyle.height, 10) - parseInt(containerStyle.paddingTop, 10) - parseInt(containerStyle.paddingBottom, 10);
+    containerWidth = Math.round(parseFloat(containerStyle.width) - parseFloat(containerStyle.paddingLeft) - parseFloat(containerStyle.paddingRight));
+    containerHeight = Math.round(parseFloat(containerStyle.height) - parseFloat(containerStyle.paddingTop) - parseFloat(containerStyle.paddingBottom));
   } else {
-    containerWidth = parseFloat(containerStyle.width);
-    containerHeight = parseFloat(containerStyle.height);
+    containerWidth = Math.round(parseFloat(containerStyle.width));
+    containerHeight = Math.round(parseFloat(containerStyle.height));
   }
 
   // Min and max font size.
