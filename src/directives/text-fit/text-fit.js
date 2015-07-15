@@ -14,7 +14,7 @@
 //   on the shouldWarn parameter.  This allows the caller to retry again later,
 //   perhaps after the element has become visible.
 angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( element, options, shouldWarn ) {
-  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, projectedPercentageOfBox, accuracy, allowWordWrap, debug
+  var min, max, mid, lastMid, containerStyle, containerWidth, containerHeight, accuracy, allowWordWrap, debug
   
   debug = function ( ...args ) {
 

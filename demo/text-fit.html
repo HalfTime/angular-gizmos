@@ -28,6 +28,18 @@
 			      $scope.$broadcast('textFit')
 			    })
 			  }
+			  
+			  $scope.timeoutTest = function(){
+				  $timeout( function(){
+
+					  $scope.height = 400
+					  $scope.width = 600
+					  $scope.$broadcast('textFit')	  
+					  
+				  }, 5000)
+
+				  
+			  }
 			})			
 			
 		</script>
@@ -59,6 +71,8 @@
 		  Padding: <input type="number" ng-model="padding" ng-change="doStuff()" ng-model-options="{debounce: 500}"/><br/>
 		  Text In Box 1: <input ng-model="myText1"/> 
 		  Console Output: <input type="checkbox" ng-model="consoleOut" ng-change="doStuff()" ng-model-options="{debounce: 500}" ng-true-value="'info'">
+		  <br>
+		  <button ng-click="timeoutTest()">$timeout Test</button> this will wait 10 seconds, then resize the H x W and then rerun textfit. Used to test if when you refocus the browser window, will it work.
 		  <hr/>
 		  <h1>With good first guess</h1>
 		    <div ng-style="{height: height+'px', width: width+'px'}" class="my-box">
