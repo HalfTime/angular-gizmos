@@ -49,13 +49,13 @@ angular.module( 'gizmos.directives' ).value( 'textFit', function textFit( elemen
   // This is slow but WAY more reliable than el.scrollWidth. This method factors
   // in padding and such. Slower probably not an issue since the container is 
   // only computed once per font resize.
-  containerStyle = window.getComputedStyle(element.parent()[0])
-  if( containerStyle["box-sizing"] === 'border-box') {
-    containerWidth = parseInt(containerStyle.width, 10) - parseInt(containerStyle.paddingLeft, 10) - parseInt(containerStyle.paddingRight, 10) 
-    containerHeight = parseInt(containerStyle.height, 10)  - parseInt(containerStyle.paddingTop, 10) - parseInt(containerStyle.paddingBottom, 10)
+  containerStyle = window.getComputedStyle(element.parent()[0]);
+  if (containerStyle["box-sizing"] === "border-box") {
+    containerWidth = Math.ceil(parseFloat(containerStyle.width)) - Math.ceil(parseFloat(containerStyle.paddingLeft)) - Math.ceil(parseFloat(containerStyle.paddingRight));
+    containerHeight = Math.ceil(parseFloat(containerStyle.height)) - Math.ceil(parseFloat(containerStyle.paddingTop)) - Math.ceil(parseFloat(containerStyle.paddingBottom));
   } else {
-    containerWidth = parseFloat(containerStyle.width)
-    containerHeight = parseFloat(containerStyle.height)     
+    containerWidth = Math.ceil(parseFloat(containerStyle.width));
+    containerHeight = Math.ceil(parseFloat(containerStyle.height));
   }
 
   // Min and max font size.
