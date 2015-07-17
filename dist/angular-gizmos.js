@@ -827,7 +827,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
   // Min and max font size.
   min = options.min || 6;
-  max = Math.min(containerHeight, options.max || 120);
+  max = Math.min(Math.max(containerHeight, containerWidth), options.max || 120);
   mid = Math.floor((min + max) / 2 * 10) / 10;
 
   // Do a binary search for the best font size
@@ -837,7 +837,7 @@ angular.module("gizmos.directives").value("textFit", function textFit(element, o
 
     // Use scrollWidth because it checks for overflow text
     var width = element[0].scrollWidth;
-    var height = element[0].offsetHeight;
+    var height = element[0].scrollHeight;
     var isTooBig = height > containerHeight || width > containerWidth;
 
     debug("[textFit] %sx%s in %sx%s. %s < (%s) < %s - %s", width, height, containerWidth, containerHeight, min, mid, max, isTooBig ? "too big" : "too small");
