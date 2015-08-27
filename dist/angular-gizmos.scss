@@ -167,20 +167,3 @@ $breakpoints: (
   background-repeat: no-repeat;
 }
 
-
-.topic-ring {
-  position: relative;
-  width: 35px;
-  height: 35px;
- }
-
- .topic-ring-level {
-   position: absolute;
-   top: 10px;
-   text-align: center;
-   width: 35px;
-   height: 35px;
-   color: $gray7;
-   @include font( 0.9 );
- }
-
